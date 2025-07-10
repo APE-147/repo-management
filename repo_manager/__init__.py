@@ -10,5 +10,6 @@ __description__ = "Automated GitHub repository management system"
 
 from .core import RepoManager
 from .config import Config
+from .database import DatabaseManager
 
-__all__ = ["RepoManager", "Config"]
+__all__ = ["RepoManager", "Config", "DatabaseManager"]

@@ -18,11 +18,15 @@ class RepoManager:
         self.config = config or Config()
         self.setup_logging()
         
+        # 初始化数据库
+        from .database import DatabaseManager
+        db_path = self.config.data_dir / "repositories.db"
+        self.db_manager = DatabaseManager(db_path)
+        
         # 初始化各个组件
         self.file_monitor = FileMonitor(self.config)
-        self.repo_creator = RepoCreator(self.config)
-        self.github_detector = GitHubDetector(self.config)
-        self.index_updater = IndexUpdater(self.config)
+        self.github_detector = GitHubDetector(self.config, self.db_manager)
+        self.index_updater = IndexUpdater(self.config, self.db_manager)
         self.git_manager = GitManager(self.config)
     
     def setup_logging(self):
@@ -66,8 +70,14 @@ class RepoManager:
         self.config.initialize_data_files()
         
         # 检查GitHub CLI
-        if not self.repo_creator.check_gh_cli():
-            self.logger.error("GitHub CLI未正确配置")
+        try:
+            import subprocess
+            result = subprocess.run(['gh', 'auth', 'status'], capture_output=True, text=True)
+            if result.returncode != 0:
+                self.logger.error("GitHub CLI未认证，请运行: gh auth login")
+                return False
+        except FileNotFoundError:
+            self.logger.error("GitHub CLI未安装，请先安装 GitHub CLI")
             return False
         
         self.logger.info("初始化完成")
@@ -80,21 +90,14 @@ class RepoManager:
         # 1. 检测文件变动
         changes = self.file_monitor.monitor_once()
         
-        # 2. 处理新文件和修改的文件
-        if changes and (changes["new_files"] or changes["modified_files"]):
-            for file_info in changes["new_files"] + changes["modified_files"]:
-                repo_name = file_info["name"]
-                category = file_info["category"]
-                description = self.file_monitor.get_file_description(file_info["path"])
-                
-                # 创建仓库
-                if self.repo_creator.create_repository(repo_name, description, category):
-                    self.logger.info(f"成功处理文件: {file_info['path']}")
+        # 2. 检测GitHub上未索引的仓库
+        unindexed_repos = self.github_detector.detect_unindexed_repositories()
         
-        # 3. 检测GitHub新仓库
-        new_github_repos = self.github_detector.detect_new_repositories()
+        # 3. 将未索引的仓库添加到Default分类
+        if unindexed_repos:
+            self.index_updater.add_repositories_to_index(unindexed_repos, "Default")
         
-        # 4. 更新索引
+        # 4. 更新所有分类的索引
         self.index_updater.update_all_categories()
         
         # 5. 提交更改
@@ -104,7 +107,7 @@ class RepoManager:
         
         return {
             "file_changes": changes,
-            "new_github_repos": new_github_repos,
+            "unindexed_repos": unindexed_repos,
             "timestamp": datetime.now().isoformat()
         }
     
@@ -112,18 +115,22 @@ class RepoManager:
         """仅更新索引"""
         self.logger.info("开始更新索引...")
         
-        # 检测GitHub新仓库
-        new_repos = self.github_detector.detect_new_repositories()
+        # 检测未索引的仓库
+        unindexed_repos = self.github_detector.detect_unindexed_repositories()
+        
+        # 将未索引的仓库添加到Default分类
+        if unindexed_repos:
+            self.index_updater.add_repositories_to_index(unindexed_repos, "Default")
         
         # 更新索引
         self.index_updater.update_all_categories()
         
         # 提交更改
-        if new_repos:
-            self.git_manager.commit_changes(f"Auto-update: added {len(new_repos)} new repositories")
+        if unindexed_repos:
+            self.git_manager.commit_changes(f"Auto-update: added {len(unindexed_repos)} new repositories to index")
         
         self.logger.info("索引更新完成")
-        return new_repos
+        return unindexed_repos
     
     def monitor_continuous(self):
         """持续监控模式"""
@@ -315,7 +322,9 @@ class FileMonitor:
 
 
 class RepoCreator:
-    """仓库创建器"""
+    """仓库创建器 - 已废弃，项目不再自动创建仓库，只管理现有仓库的索引
+    保留此类以保持兼容性，但不在新的流程中使用
+    """
     
     def __init__(self, config: Config):
         self.config = config
@@ -410,10 +419,11 @@ class RepoCreator:
 
 
 class GitHubDetector:
-    """GitHub仓库检测器"""
+    """GitHub仓库检测器 - 专注于检测未索引的仓库"""
     
-    def __init__(self, config: Config):
+    def __init__(self, config: Config, db_manager):
         self.config = config
+        self.db_manager = db_manager
         self.logger = logging.getLogger(f"{__name__}.GitHubDetector")
     
     def get_github_repositories(self) -> List[Dict[str, Any]]:
@@ -435,50 +445,79 @@ class GitHubDetector:
             self.logger.error(f"获取GitHub仓库时发生错误: {e}")
             return []
     
-    def detect_new_repositories(self) -> List[Dict[str, Any]]:
-        """检测GitHub上的新仓库"""
+    def detect_unindexed_repositories(self) -> List[Dict[str, Any]]:
+        """检测未索引的仓库"""
         current_repos = self.get_github_repositories()
         if not current_repos:
             return []
         
-        # 加载缓存
-        cache_data = {"repos": [], "last_check": None}
-        if self.config.github_cache_file.exists():
-            try:
-                with open(self.config.github_cache_file, 'r', encoding='utf-8') as f:
-                    cache_data = json.load(f)
-            except Exception as e:
-                self.logger.error(f"加载GitHub缓存失败: {e}")
+        # 获取当前已索引的仓库名称
+        indexed_repo_names = self.get_indexed_repository_names_from_readmes()
         
-        cached_repos = cache_data.get("repos", [])
-        cached_repo_names = {repo["name"] for repo in cached_repos}
-        
-        # 找出新仓库
-        new_repos = []
+        # 找出未索引的仓库
+        unindexed_repos = []
         for repo in current_repos:
-            if repo["name"] not in cached_repo_names:
+            repo_name = repo["name"]
+            
+            # 跳过索引仓库本身
+            if repo_name in ["Default", "Crawler", "Script", "Trading", "repo-management"]:
+                continue
+                
+            # 如果仓库未在任何README中索引，则添加到未索引列表
+            if repo_name not in indexed_repo_names:
                 repo_info = {
-                    "name": repo["name"],
+                    "name": repo_name,
                     "description": repo.get("description", ""),
                     "created_at": repo["createdAt"],
                     "url": repo["url"],
-                    "category": self.guess_category(repo["name"], repo.get("description", "")),
+                    "category": self.guess_category(repo_name, repo.get("description", "")),
                     "source": "github_detected"
                 }
-                new_repos.append(repo_info)
-                self.logger.info(f"检测到新仓库: {repo['name']}")
+                unindexed_repos.append(repo_info)
+                self.logger.info(f"检测到未索引仓库: {repo_name}")
         
-        if new_repos:
-            # 更新缓存
-            cache_data["repos"] = current_repos
-            cache_data["last_check"] = datetime.now().isoformat()
-            
-            with open(self.config.github_cache_file, 'w', encoding='utf-8') as f:
-                json.dump(cache_data, f, indent=2, ensure_ascii=False)
-            
-            self.logger.info(f"检测到 {len(new_repos)} 个新仓库")
+        # 将未索引的仓库添加到数据库
+        for repo in unindexed_repos:
+            self.db_manager.add_repository(
+                name=repo["name"],
+                description=repo["description"],
+                url=repo["url"],
+                category=repo["category"],
+                created_at=repo["created_at"],
+                is_indexed=False
+            )
         
-        return new_repos
+        if unindexed_repos:
+            self.logger.info(f"检测到 {len(unindexed_repos)} 个未索引仓库")
+        
+        return unindexed_repos
+    
+    def get_indexed_repository_names_from_readmes(self) -> set:
+        """从所有README文件中提取已索引的仓库名称"""
+        indexed_repos = set()
+        
+        for category, directory in self.config.repo_categories.items():
+            readme_path = directory / "README.md"
+            if readme_path.exists():
+                try:
+                    content = readme_path.read_text(encoding='utf-8')
+                    # 使用正则表达式提取GitHub仓库链接
+                    import re
+                    # 匹配形式如: [repo-name](https://github.com/username/repo-name)
+                    pattern = r'\[([^\]]+)\]\(https://github\.com/[^/]+/([^)]+)\)'
+                    matches = re.findall(pattern, content)
+                    
+                    for match in matches:
+                        # match[1] 是仓库名称
+                        repo_name = match[1]
+                        indexed_repos.add(repo_name)
+                        self.logger.debug(f"从 {category} README中发现已索引仓库: {repo_name}")
+                        
+                except Exception as e:
+                    self.logger.error(f"读取README文件失败 {readme_path}: {e}")
+        
+        self.logger.info(f"从 README文件中找到 {len(indexed_repos)} 个已索引仓库")
+        return indexed_repos
     
     def guess_category(self, repo_name: str, description: str) -> str:
         """根据仓库名称和描述猜测分类"""
@@ -502,38 +541,33 @@ class GitHubDetector:
 class IndexUpdater:
     """索引更新器"""
     
-    def __init__(self, config: Config):
+    def __init__(self, config: Config, db_manager):
         self.config = config
+        self.db_manager = db_manager
         self.logger = logging.getLogger(f"{__name__}.IndexUpdater")
     
-    def load_repo_cache(self) -> List[Dict[str, Any]]:
-        """加载仓库缓存"""
-        if self.config.repo_cache_file.exists():
-            try:
-                with open(self.config.repo_cache_file, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                    return data.get("repos", [])
-            except Exception as e:
-                self.logger.error(f"加载仓库缓存失败: {e}")
-        return []
+    def add_repositories_to_index(self, repositories: List[Dict[str, Any]], target_category: str = "Default"):
+        """将仓库添加到指定分类的索引中"""
+        if not repositories:
+            return
+            
+        for repo in repositories:
+            # 在数据库中标记为已索引
+            self.db_manager.mark_repository_indexed(repo["name"], target_category)
+            self.logger.info(f"将仓库 {repo['name']} 添加到 {target_category} 索引")
+        
+        # 更新对应分类的README文件
+        self.update_category_index(target_category)
     
     def update_all_categories(self):
         """更新所有分类的索引"""
-        repos = self.load_repo_cache()
-        
         for category in self.config.repo_categories.keys():
-            self.update_category_index(category, repos)
+            self.update_category_index(category)
     
-    def update_category_index(self, category: str, repos: Optional[List[Dict[str, Any]]] = None):
+    def update_category_index(self, category: str):
         """更新特定分类的索引"""
-        if repos is None:
-            repos = self.load_repo_cache()
-        
-        # 筛选出该分类的仓库
-        category_repos = [repo for repo in repos if repo.get("category") == category]
-        
-        # 按创建时间排序
-        category_repos.sort(key=lambda x: x.get("created_at", ""), reverse=True)
+        # 从数据库获取该分类的仓库
+        category_repos = self.db_manager.get_repositories_by_category(category)
         
         # 更新README文件
         readme_path = self.config.repo_categories[category] / "README.md"
@@ -549,8 +583,8 @@ class IndexUpdater:
             # 读取现有内容
             content = readme_path.read_text(encoding='utf-8')
             
-            # 生成项目列表HTML
-            projects_html = self._generate_projects_html(repos)
+            # 生成项目列表
+            projects_list = self._generate_projects_list(repos)
             
             # 查找并替换自动生成的内容区域
             start_marker = "<!-- AUTO-GENERATED-CONTENT:START -->"
@@ -563,7 +597,7 @@ class IndexUpdater:
                 # 替换内容
                 new_content = (
                     content[:start_idx + len(start_marker)] + 
-                    "\n" + projects_html + "\n" +
+                    "\n" + projects_list + "\n" +
                     content[end_idx:]
                 )
                 
@@ -575,8 +609,8 @@ class IndexUpdater:
         except Exception as e:
             self.logger.error(f"更新README内容失败 {readme_path}: {e}")
     
-    def _generate_projects_html(self, repos: List[Dict[str, Any]]) -> str:
-        """生成项目列表HTML"""
+    def _generate_projects_list(self, repos: List[Dict[str, Any]]) -> str:
+        """生成项目列表（bullet list格式）"""
         if not repos:
             return "<!-- 暂无项目 -->"
         
@@ -596,7 +630,12 @@ class IndexUpdater:
                 except:
                     pass
             
-            lines.append(f"- **[{name}]({url})** - {description}")
+            # 使用bullet list格式
+            if description:
+                lines.append(f"- **[{name}]({url})** - {description}")
+            else:
+                lines.append(f"- **[{name}]({url})**")
+            
             if created_at:
                 lines.append(f"  - 创建时间: {created_at}")
         
