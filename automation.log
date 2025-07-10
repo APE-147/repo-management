@@ -870,3 +870,36 @@ name already exists on this account
 2025-07-10 21:32:24,866 - index_updater - INFO - 成功更新 4 个分类的README文件
 2025-07-10 21:32:24,866 - __main__ - INFO - README索引更新成功
 2025-07-10 21:32:24,866 - __main__ - INFO - 检查并提交本地变更...
+2025-07-10 21:32:24,906 - git_manager - INFO - 文件已添加到git暂存区: 所有文件
+2025-07-10 21:32:24,924 - git_manager - INFO - Git提交成功: Update repository indices: 2025-07-10 21:32:24
+2025-07-10 21:32:25,521 - git_manager - INFO - 检测到远程默认分支: main
+2025-07-10 21:32:26,857 - git_manager - INFO - Git推送成功到分支: main
+2025-07-10 21:32:26,857 - __main__ - INFO - 主仓库变更已自动提交
+2025-07-10 21:32:26,857 - git_manager - WARNING - 分类目录不是git仓库: Default
+2025-07-10 21:32:26,857 - git_manager - WARNING - 分类目录不是git仓库: Crawler
+2025-07-10 21:32:26,857 - git_manager - WARNING - 分类目录不是git仓库: Script
+2025-07-10 21:32:26,857 - git_manager - WARNING - 分类目录不是git仓库: Trading
+2025-07-10 21:32:26,857 - __main__ - INFO - 成功同步 0/4 个分类仓库
+2025-07-10 21:32:53,101 - __main__ - INFO - 执行初始扫描...
+2025-07-10 21:32:53,101 - __main__ - INFO - 初始扫描未发现新文件
+2025-07-10 21:32:53,101 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 21:32:53,101 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 21:32:53,101 - __main__ - INFO - 检查GitHub新仓库...
+2025-07-10 21:32:53,101 - github_detector - INFO - 开始检测GitHub新仓库...
+2025-07-10 21:32:53,898 - github_detector - INFO - 从GitHub获取到 8 个仓库
+2025-07-10 21:32:53,899 - github_detector - INFO - 检测到新仓库: crypto-analyzer
+2025-07-10 21:32:53,900 - github_detector - INFO - 检测到新仓库: test-auto-match-pull
+2025-07-10 21:32:53,900 - github_detector - INFO - 检测到新仓库: test-project
+2025-07-10 21:32:53,900 - github_detector - INFO - GitHub缓存已更新
+2025-07-10 21:32:53,900 - github_detector - INFO - 检测到 3 个新仓库
+2025-07-10 21:32:53,901 - github_detector - INFO - 本地缓存已更新
+2025-07-10 21:32:53,901 - github_detector - INFO - 检测完成，发现 3 个新仓库
+2025-07-10 21:32:53,901 - __main__ - INFO - 检测到 3 个新仓库
+2025-07-10 21:32:53,901 - __main__ - INFO - 更新README索引文件...
+2025-07-10 21:32:53,902 - index_updater - INFO - 更新README文件: /Users/niceday/Developer/Code/Local/Script/desktop/repo-management/Default/README.md
+2025-07-10 21:32:53,902 - index_updater - INFO - 更新README文件: /Users/niceday/Developer/Code/Local/Script/desktop/repo-management/Crawler/README.md
+2025-07-10 21:32:53,902 - index_updater - INFO - 更新README文件: /Users/niceday/Developer/Code/Local/Script/desktop/repo-management/Script/README.md
+2025-07-10 21:32:53,902 - index_updater - INFO - 更新README文件: /Users/niceday/Developer/Code/Local/Script/desktop/repo-management/Trading/README.md
+2025-07-10 21:32:53,902 - index_updater - INFO - 成功更新 4 个分类的README文件
+2025-07-10 21:32:53,902 - __main__ - INFO - README索引更新成功
+2025-07-10 21:32:53,902 - __main__ - INFO - 检查并提交本地变更...
