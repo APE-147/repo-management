@@ -21,9 +21,12 @@ def create_launchd_plist(config: Config) -> str:
     else:
         program_arguments = [repo_manager_path, 'monitor']
     
-    # 如果指定了自定义配置目录
+    # 如果指定了自定义配置目录，需要在monitor命令之前添加
     if config.config_dir != Path.home() / ".repo-manager":
-        program_arguments.extend(['--config-dir', str(config.config_dir)])
+        if repo_manager_path:
+            program_arguments = [repo_manager_path, '--config-dir', str(config.config_dir), 'monitor']
+        else:
+            program_arguments = [python_executable, '-m', 'repo_manager.cli', '--config-dir', str(config.config_dir), 'monitor']
     
     plist_content = f"""<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
