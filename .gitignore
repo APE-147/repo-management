@@ -48,7 +48,6 @@ dist/
 
 # Configuration and data directories
 /.repo-manager/
-/repo_index/
 
 # Python compiled files - extra protection
 **/__pycache__/
@@ -56,6 +55,5 @@ dist/
 **/*.pyo
 **/*.pyd
 
-# Sensitive user data
-repo_index/**
+# User data directories (exclude entire data directory)
 .repo-manager/**
