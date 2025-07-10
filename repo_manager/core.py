@@ -460,7 +460,7 @@ class GitHubDetector:
             repo_name = repo["name"]
             
             # 跳过索引仓库本身
-            if repo_name in ["Default", "Crawler", "Script", "Trading", "repo-management"]:
+            if repo_name in ["Default", "Crawler", "Script", "Trading"]:
                 continue
                 
             # 如果仓库未在任何README中索引，则添加到未索引列表
