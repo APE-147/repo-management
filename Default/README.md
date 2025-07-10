@@ -15,6 +15,8 @@ This repository contains the default collection of projects and serves as the ma
 *This file is automatically maintained by the repo-management system.*
 
 <!-- AUTO-GENERATED-CONTENT:START -->
+- **[Default](https://github.com/APE-147/Default)** - Default category repository index
+  - 创建时间: 2025-07-10T18:24:00.709225
 - **[default](https://github.com/APE-147/default)** - Default category repository index
   - 创建时间: 2025-07-10T17:48:39.907101
 - **[test-new-default-project](https://github.com/APE-147/test-new-default-project)** - Testing new project auto-categorization to Default

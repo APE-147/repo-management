@@ -215,8 +215,8 @@ class GitManager:
                 self.logger.error(f"初始化git仓库失败: {category_name}")
                 continue
             
-            # 设置远程仓库（仓库名为小写的分类名）
-            repo_name = category_name.lower()
+            # 设置远程仓库（仓库名为首字母大写的分类名）
+            repo_name = category_name.capitalize()
             if not self.setup_remote(repo_name, category_path):
                 self.logger.error(f"设置远程仓库失败: {category_name}")
                 continue

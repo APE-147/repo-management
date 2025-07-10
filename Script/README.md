@@ -22,6 +22,8 @@ This repository contains automation scripts and utility tools.
 *This file is automatically maintained by the repo-management system.*
 
 <!-- AUTO-GENERATED-CONTENT:START -->
+- **[Script](https://github.com/APE-147/Script)** - Script category repository index
+  - 创建时间: 2025-07-10T18:24:04.526147
 - **[script](https://github.com/APE-147/script)** - Script category repository index
   - 创建时间: 2025-07-10T17:48:44.383900
 - **[test-project](https://github.com/APE-147/test-project)** - Test Project

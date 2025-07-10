@@ -73,7 +73,35 @@
       "url": "https://github.com/APE-147/test-new-default-project",
       "category": "Default",
       "source": "github_detected"
+    },
+    {
+      "name": "Default",
+      "description": "Default category repository index",
+      "category": "Default",
+      "created_at": "2025-07-10T18:24:00.709225",
+      "url": "https://github.com/APE-147/Default"
+    },
+    {
+      "name": "Crawler",
+      "description": "Crawler category repository index",
+      "category": "Crawler",
+      "created_at": "2025-07-10T18:24:02.648789",
+      "url": "https://github.com/APE-147/Crawler"
+    },
+    {
+      "name": "Script",
+      "description": "Script category repository index",
+      "category": "Script",
+      "created_at": "2025-07-10T18:24:04.526147",
+      "url": "https://github.com/APE-147/Script"
+    },
+    {
+      "name": "Trading",
+      "description": "Trading category repository index",
+      "category": "Trading",
+      "created_at": "2025-07-10T18:24:06.270476",
+      "url": "https://github.com/APE-147/Trading"
     }
   ],
-  "last_check": "2025-07-10T18:00:59.876632"
+  "last_check": "2025-07-10T18:24:06.270495"
 }

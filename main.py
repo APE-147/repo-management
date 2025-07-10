@@ -239,7 +239,7 @@ class RepoManager:
         creator = RepoCreator()
         
         for category_name, category_path in REPO_CATEGORIES.items():
-            repo_name = category_name.lower()
+            repo_name = category_name.capitalize()
             description = f"{category_name} category repository index"
             
             self.logger.info(f"创建GitHub仓库: {repo_name}")
