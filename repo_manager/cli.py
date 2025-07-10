@@ -120,7 +120,10 @@ def cmd_status(args):
     print(f"配置目录: {status['config_dir']}")
     print(f"数据目录: {status['data_dir']}")
     print(f"GitHub用户: {status['github_username']}")
-    print(f"监控间隔: {status['monitor_interval']}秒")
+    print(f"主监控间隔: {status['monitor_interval']}秒")
+    print(f"文件监控间隔: {status['file_monitor_interval']}秒")
+    print(f"提交延迟: {status['commit_delay']}秒")
+    print(f"GitHub缓存间隔: {status['github_cache_interval']}秒")
     print(f"支持分类: {', '.join(status['categories'])}")
     
     print("\n缓存文件状态:")

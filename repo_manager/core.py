@@ -178,6 +178,9 @@ class RepoManager:
             "data_dir": str(self.config.data_dir),
             "github_username": self.config.github_username,
             "monitor_interval": self.config.monitor_interval,
+            "file_monitor_interval": self.config.file_monitor_interval,
+            "commit_delay": self.config.commit_delay,
+            "github_cache_interval": self.config.github_cache_interval,
             "categories": list(self.config.repo_categories.keys()),
             "cache_files": {
                 "repo_cache": self.config.repo_cache_file.exists(),
