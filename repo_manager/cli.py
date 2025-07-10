@@ -73,8 +73,8 @@ def cmd_scan(args):
               f"修改{len(changes['modified_files'])}个, "
               f"删除{len(changes['deleted_files'])}个")
     
-    if result["new_github_repos"]:
-        print(f"发现新GitHub仓库: {len(result['new_github_repos'])}个")
+    if result["unindexed_repos"]:
+        print(f"发现未索引仓库: {len(result['unindexed_repos'])}个")
 
 def cmd_update(args):
     """仅更新索引"""
@@ -90,7 +90,7 @@ def cmd_update(args):
     
     print("✅ 索引更新完成!")
     if new_repos:
-        print(f"发现并添加了 {len(new_repos)} 个新仓库")
+        print(f"发现并添加了 {len(new_repos)} 个未索引仓库到索引中")
 
 def cmd_monitor(args):
     """持续监控模式"""
