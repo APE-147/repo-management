@@ -1,0 +1,11 @@
+# GitHub仓库自动管理系统依赖
+
+# 注意：本项目主要使用Python标准库和GitHub CLI
+# 确保已安装 GitHub CLI: brew install gh
+# 并完成认证: gh auth login
+
+# 以下为Python依赖（如果需要扩展功能）
+# requests>=2.25.0
+# pygithub>=1.55
+# watchdog>=2.1.0
+# pyyaml>=5.4.0
