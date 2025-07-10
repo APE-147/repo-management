@@ -57,3 +57,6 @@ dist/
 
 # User data directories (exclude entire data directory)
 .repo-manager/**
+
+# Temporary category repository clones
+category_repos/

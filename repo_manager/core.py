@@ -676,17 +676,77 @@ class IndexUpdater:
             self.update_category_index(category)
     
     def update_category_index(self, category: str):
-        """更新特定分类的索引"""
+        """更新特定分类的索引（本地和远程）"""
         # 从数据库获取该分类的仓库
         category_repos = self.db_manager.get_repositories_by_category(category)
         
-        # 更新README文件
+        # 1. 更新本地repo_index README文件
         readme_path = self.config.repo_categories[category] / "README.md"
         if readme_path.exists():
             self._update_readme_content(readme_path, category_repos)
-            self.logger.info(f"已更新 {category} 分类索引，包含 {len(category_repos)} 个项目")
+            self.logger.info(f"已更新本地 {category} 分类索引，包含 {len(category_repos)} 个项目")
         else:
             self.logger.warning(f"{category} 分类的README文件不存在: {readme_path}")
+        
+        # 2. 更新远程分类仓库
+        self._update_remote_category_repo(category, category_repos)
+    
+    def _update_remote_category_repo(self, category: str, repos: List[Dict[str, Any]]):
+        """更新远程分类仓库"""
+        try:
+            # 创建GitManager实例用于远程仓库操作
+            git_manager = GitManager(self.config)
+            
+            # 克隆或更新远程仓库
+            if not git_manager.clone_or_update_category_repo(category):
+                self.logger.error(f"无法克隆或更新远程仓库: {category}")
+                return
+            
+            # 生成README内容
+            readme_content = self._generate_full_readme_content(category, repos)
+            
+            # 更新远程仓库的README
+            if git_manager.update_category_readme(category, readme_content):
+                # 提交并推送变更
+                commit_message = f"Auto-update: {len(repos)} repositories indexed"
+                if git_manager.commit_and_push_category_repo(category, commit_message):
+                    self.logger.info(f"成功更新远程 {category} 仓库")
+                else:
+                    self.logger.error(f"推送远程 {category} 仓库失败")
+            else:
+                self.logger.error(f"更新远程 {category} README失败")
+                
+        except Exception as e:
+            self.logger.error(f"更新远程分类仓库失败 {category}: {e}")
+    
+    def _generate_full_readme_content(self, category: str, repos: List[Dict[str, Any]]) -> str:
+        """生成完整的README内容用于远程仓库"""
+        category_descriptions = {
+            "Default": "Default projects",
+            "Crawler": "Web scraping and crawling projects", 
+            "Script": "Automation scripts and tools",
+            "Trading": "Trading and financial projects"
+        }
+        
+        description = category_descriptions.get(category, f"{category} projects")
+        projects_list = self._generate_projects_list(repos)
+        
+        return f"""# {category} Projects
+
+{description}
+
+## Project List
+
+<!-- 自动生成的项目列表将在此处更新 -->
+
+---
+
+*This file is automatically maintained by the repo-management system.*
+
+<!-- AUTO-GENERATED-CONTENT:START -->
+{projects_list}
+<!-- AUTO-GENERATED-CONTENT:END -->
+"""
     
     def _update_readme_content(self, readme_path: Path, repos: List[Dict[str, Any]]):
         """更新README文件的内容"""
@@ -754,14 +814,103 @@ class IndexUpdater:
 
 
 class GitManager:
-    """Git管理器"""
+    """Git管理器 - 支持多仓库管理"""
     
     def __init__(self, config: Config):
         self.config = config
         self.logger = logging.getLogger(f"{__name__}.GitManager")
+        # 远程分类仓库的本地克隆目录
+        self.category_repos_dir = self.config.config_dir.parent / "category_repos"
+        self.category_repos_dir.mkdir(exist_ok=True)
+    
+    def clone_or_update_category_repo(self, category: str) -> bool:
+        """克隆或更新分类仓库"""
+        try:
+            repo_url = f"https://github.com/{self.config.github_username}/{category}.git"
+            local_path = self.category_repos_dir / category
+            
+            if local_path.exists():
+                # 仓库已存在，执行pull
+                self.logger.info(f"更新分类仓库: {category}")
+                result = subprocess.run(['git', 'pull'], cwd=local_path, capture_output=True, text=True)
+                if result.returncode != 0:
+                    self.logger.warning(f"Pull失败: {result.stderr}")
+                    return False
+            else:
+                # 克隆仓库
+                self.logger.info(f"克隆分类仓库: {category} from {repo_url}")
+                result = subprocess.run(['git', 'clone', repo_url, str(local_path)], 
+                                     capture_output=True, text=True)
+                if result.returncode != 0:
+                    self.logger.error(f"克隆失败: {result.stderr}")
+                    return False
+            
+            return True
+        except Exception as e:
+            self.logger.error(f"克隆或更新分类仓库失败 {category}: {e}")
+            return False
+    
+    def update_category_readme(self, category: str, content: str) -> bool:
+        """更新分类仓库的README.md文件"""
+        try:
+            local_path = self.category_repos_dir / category
+            readme_path = local_path / "README.md"
+            
+            if not local_path.exists():
+                self.logger.error(f"分类仓库目录不存在: {local_path}")
+                return False
+            
+            # 写入README内容
+            with open(readme_path, 'w', encoding='utf-8') as f:
+                f.write(content)
+            
+            self.logger.info(f"已更新分类README: {category}")
+            return True
+        except Exception as e:
+            self.logger.error(f"更新分类README失败 {category}: {e}")
+            return False
+    
+    def commit_and_push_category_repo(self, category: str, message: str) -> bool:
+        """提交并推送分类仓库的变更"""
+        try:
+            local_path = self.category_repos_dir / category
+            
+            if not local_path.exists():
+                self.logger.error(f"分类仓库目录不存在: {local_path}")
+                return False
+            
+            # 检查是否有变更
+            result = subprocess.run(['git', 'status', '--porcelain'], 
+                                  cwd=local_path, capture_output=True, text=True)
+            
+            if result.returncode == 0 and result.stdout.strip():
+                # 添加变更
+                subprocess.run(['git', 'add', '.'], cwd=local_path, check=True)
+                
+                # 提交变更
+                subprocess.run(['git', 'commit', '-m', message], cwd=local_path, check=True)
+                
+                # 推送到远程
+                push_result = subprocess.run(['git', 'push'], cwd=local_path, capture_output=True, text=True)
+                if push_result.returncode != 0:
+                    self.logger.error(f"推送失败 {category}: {push_result.stderr}")
+                    return False
+                
+                self.logger.info(f"成功提交并推送分类仓库: {category}")
+                return True
+            else:
+                self.logger.info(f"分类仓库无变更: {category}")
+                return True
+                
+        except subprocess.CalledProcessError as e:
+            self.logger.error(f"提交推送分类仓库失败 {category}: {e}")
+            return False
+        except Exception as e:
+            self.logger.error(f"提交推送分类仓库失败 {category}: {e}")
+            return False
     
     def commit_changes(self, message: str):
-        """提交更改"""
+        """提交本地repo-management项目的更改"""
         try:
             # 获取项目根目录
             project_root = self.config.config_dir.parent
@@ -783,10 +932,14 @@ class GitManager:
                 subprocess.run(['git', 'commit', '-m', message], cwd=project_root, check=True)
                 
                 self.logger.info(f"Git提交完成: {message}")
+                return True
             else:
                 self.logger.info("没有需要提交的变更")
+                return False
                 
         except subprocess.CalledProcessError as e:
             self.logger.error(f"Git操作失败: {e}")
+            return False
         except Exception as e:
             self.logger.error(f"提交更改失败: {e}")
+            return False
