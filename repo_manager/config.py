@@ -28,9 +28,9 @@ class Config:
         self.config_file = self.config_dir / "config.json"
         self.data_dir = self.config_dir / "data"
         
-        # 设置repo-index目录为项目根目录下的repo-index
+        # 设置repo_index目录为项目根目录下的repo_index
         project_root = self.config_dir.parent
-        self.repo_index_dir = project_root / "repo-index"
+        self.repo_index_dir = project_root / "repo_index"
         
         # 创建必要的目录
         self._ensure_directories()

@@ -11,5 +11,4 @@ Trading and financial projects
 *This file is automatically maintained by the repo-management system.*
 
 <!-- AUTO-GENERATED-CONTENT:START -->
-<!-- 暂无项目 -->
 <!-- AUTO-GENERATED-CONTENT:END -->
