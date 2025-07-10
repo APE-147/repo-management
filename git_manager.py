@@ -197,3 +197,63 @@ class GitManager:
         except subprocess.CalledProcessError as e:
             self.logger.error(f"设置远程仓库失败: {e}")
             return False
+    
+    def setup_category_repos(self, categories):
+        """为所有分类文件夹设置独立的git仓库"""
+        success_count = 0
+        
+        for category_name, category_path in categories.items():
+            self.logger.info(f"设置分类仓库: {category_name}")
+            
+            # 确保目录存在
+            if not category_path.exists():
+                self.logger.warning(f"分类目录不存在: {category_path}")
+                continue
+            
+            # 初始化git仓库
+            if not self.init_repo(category_path):
+                self.logger.error(f"初始化git仓库失败: {category_name}")
+                continue
+            
+            # 设置远程仓库（仓库名为小写的分类名）
+            repo_name = category_name.lower()
+            if not self.setup_remote(repo_name, category_path):
+                self.logger.error(f"设置远程仓库失败: {category_name}")
+                continue
+            
+            # 执行初始提交和推送
+            if self.auto_commit_and_push(f"Initialize {category_name} repository", category_path):
+                # 设置main分支并推送
+                try:
+                    subprocess.run(['git', 'branch', '-M', 'main'], cwd=category_path, check=True)
+                    subprocess.run(['git', 'push', '-u', 'origin', 'main'], cwd=category_path, check=True)
+                    self.logger.info(f"分类仓库推送成功: {category_name}")
+                except subprocess.CalledProcessError as e:
+                    self.logger.warning(f"推送失败但仓库已设置: {category_name}")
+                success_count += 1
+                self.logger.info(f"分类仓库设置成功: {category_name}")
+            else:
+                self.logger.error(f"初始提交失败: {category_name}")
+        
+        self.logger.info(f"成功设置 {success_count}/{len(categories)} 个分类仓库")
+        return success_count == len(categories)
+    
+    def sync_category_changes(self, category_name, category_path):
+        """同步单个分类的变更"""
+        try:
+            # 检查是否为git仓库
+            if not self.is_git_repo(category_path):
+                self.logger.warning(f"分类目录不是git仓库: {category_name}")
+                return False
+            
+            # 检查是否有变更
+            if not self.has_changes(category_path):
+                return True
+            
+            # 提交并推送变更
+            commit_message = f"Update {category_name} repository content"
+            return self.auto_commit_and_push(commit_message, category_path)
+            
+        except Exception as e:
+            self.logger.error(f"同步分类变更失败 {category_name}: {e}")
+            return False

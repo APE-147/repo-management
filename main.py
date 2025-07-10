@@ -9,7 +9,7 @@ import logging
 from datetime import datetime
 from pathlib import Path
 
-from config import MONITOR_INTERVAL, LOG_FILE
+from config import MONITOR_INTERVAL, LOG_FILE, REPO_CATEGORIES
 from repo_creator import RepoCreator
 from file_monitor import FileMonitor
 from index_updater import IndexUpdater
@@ -120,13 +120,23 @@ class RepoManager:
         return success
     
     def auto_commit_changes(self):
-        """自动提交本地变更到git"""
+        """自动提交本地变更到git - 同步所有分类仓库"""
         self.logger.info("检查并提交本地变更...")
-        success = self.git_manager.auto_commit_and_push("Update repository indices")
-        if success:
-            self.logger.info("本地变更已自动提交")
-        else:
-            self.logger.warning("自动提交失败或无变更需要提交")
+        
+        # 主仓库的变更
+        main_success = self.git_manager.auto_commit_and_push("Update repository indices")
+        if main_success:
+            self.logger.info("主仓库变更已自动提交")
+        
+        # 分类仓库的变更
+        category_success_count = 0
+        for category_name, category_path in REPO_CATEGORIES.items():
+            if self.git_manager.sync_category_changes(category_name, category_path):
+                category_success_count += 1
+        
+        self.logger.info(f"成功同步 {category_success_count}/{len(REPO_CATEGORIES)} 个分类仓库")
+        
+        return main_success and category_success_count == len(REPO_CATEGORIES)
     
     def check_github_repositories(self):
         """检查GitHub新仓库并更新索引"""
@@ -219,6 +229,31 @@ class RepoManager:
             self.update_indices()
         else:
             self.logger.info("初始扫描未发现新文件")
+    
+    def setup_category_repositories(self):
+        """设置所有分类仓库"""
+        self.logger.info("开始设置分类仓库...")
+        
+        # 为每个分类创建GitHub仓库
+        from repo_creator import RepoCreator
+        creator = RepoCreator()
+        
+        for category_name, category_path in REPO_CATEGORIES.items():
+            repo_name = category_name.lower()
+            description = f"{category_name} category repository index"
+            
+            self.logger.info(f"创建GitHub仓库: {repo_name}")
+            creator.create_repository(repo_name, description, category_name)
+        
+        # 设置本地git仓库并推送
+        success = self.git_manager.setup_category_repos(REPO_CATEGORIES)
+        
+        if success:
+            self.logger.info("所有分类仓库设置成功")
+        else:
+            self.logger.warning("部分分类仓库设置失败")
+        
+        return success
 
 def main():
     """主函数"""
@@ -246,9 +281,14 @@ def main():
             print("更新README索引...")
             manager.update_indices()
             
+        elif command == "setup-repos":
+            # 设置分类仓库
+            print("设置分类仓库...")
+            manager.setup_category_repositories()
+            
         else:
             print(f"未知命令: {command}")
-            print("可用命令: scan, init, update")
+            print("可用命令: scan, init, update, setup-repos")
             sys.exit(1)
     else:
         # 持续监控模式

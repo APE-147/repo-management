@@ -69,7 +69,35 @@
       "url": "https://github.com/APE-147/repo-management",
       "category": "Script",
       "source": "github_detected"
+    },
+    {
+      "name": "default",
+      "description": "Default category repository index",
+      "category": "Default",
+      "created_at": "2025-07-10T17:48:39.907101",
+      "url": "https://github.com/APE-147/default"
+    },
+    {
+      "name": "crawler",
+      "description": "Crawler category repository index",
+      "category": "Crawler",
+      "created_at": "2025-07-10T17:48:41.696062",
+      "url": "https://github.com/APE-147/crawler"
+    },
+    {
+      "name": "script",
+      "description": "Script category repository index",
+      "category": "Script",
+      "created_at": "2025-07-10T17:48:44.383900",
+      "url": "https://github.com/APE-147/script"
+    },
+    {
+      "name": "trading",
+      "description": "Trading category repository index",
+      "category": "Trading",
+      "created_at": "2025-07-10T17:48:46.178894",
+      "url": "https://github.com/APE-147/trading"
     }
   ],
-  "last_check": "2025-07-10T17:24:12.059717"
+  "last_check": "2025-07-10T17:48:46.178917"
 }

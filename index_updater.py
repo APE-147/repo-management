@@ -123,13 +123,8 @@ class IndexUpdater:
         if content is None:
             return False
         
-        # 生成新的项目列表
-        if category == "Default" and all_repos_by_category:
-            # 为Default目录生成综合索引
-            new_project_list = self.generate_default_comprehensive_list(all_repos_by_category)
-        else:
-            # 为其他分类生成常规列表
-            new_project_list = self.generate_project_list(category, repos)
+        # 为每个分类只生成本分类的项目列表
+        new_project_list = self.generate_project_list(category, repos)
         
         # 查找并替换自动生成的内容
         start_marker = README_MARKERS['start']
@@ -163,20 +158,13 @@ class IndexUpdater:
             else:
                 categorized_repos["Default"].append(repo)
         
-        # 更新每个分类的README
+        # 更新每个分类的README - 每个分类只显示自己的项目
         success_count = 0
         for category, repos in categorized_repos.items():
-            if category == "Default":
-                # 为Default分类传递完整的分类数据
-                if self.update_category_readme(category, repos, categorized_repos):
-                    success_count += 1
-                else:
-                    self.logger.error(f"更新分类 {category} 失败")
+            if self.update_category_readme(category, repos):
+                success_count += 1
             else:
-                if self.update_category_readme(category, repos):
-                    success_count += 1
-                else:
-                    self.logger.error(f"更新分类 {category} 失败")
+                self.logger.error(f"更新分类 {category} 失败")
         
         self.logger.info(f"成功更新 {success_count} 个分类的README文件")
         return success_count == len(REPO_CATEGORIES)

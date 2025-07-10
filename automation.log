@@ -491,3 +491,118 @@
 2025-07-10 17:24:12,061 - index_updater - INFO - 成功更新 4 个分类的README文件
 2025-07-10 17:24:12,061 - __main__ - INFO - README索引更新成功
 2025-07-10 17:24:12,061 - __main__ - INFO - 检查并提交本地变更...
+2025-07-10 17:24:12,089 - git_manager - INFO - 文件已添加到git暂存区: 所有文件
+2025-07-10 17:24:12,108 - git_manager - INFO - Git提交成功: Update repository indices: 2025-07-10 17:24:12
+2025-07-10 17:24:13,384 - git_manager - INFO - Git推送成功
+2025-07-10 17:24:13,384 - __main__ - INFO - 本地变更已自动提交
+2025-07-10 17:25:11,753 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:25:11,756 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:26:11,757 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:26:11,759 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:27:11,761 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:27:11,763 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:28:11,768 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:28:11,769 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:29:11,774 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:29:11,776 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:30:11,781 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:30:11,782 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:31:11,787 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:31:11,791 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:32:11,796 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:32:11,805 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:33:11,810 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:33:11,816 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:34:11,818 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:34:11,821 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:35:11,825 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:35:11,830 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:36:11,832 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:36:11,835 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:37:11,840 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:37:11,845 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:38:11,850 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:38:11,854 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:39:11,859 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:39:11,864 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:40:11,866 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:40:11,869 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:41:11,870 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:41:11,872 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:42:11,879 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:42:11,886 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:43:11,893 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:43:11,904 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:44:11,909 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:44:11,915 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:45:11,920 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:45:11,931 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:46:11,935 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:46:11,939 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:47:11,945 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:47:11,948 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:48:11,953 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:48:11,960 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:48:26,815 - __main__ - INFO - 收到信号 15，准备退出...
+2025-07-10 17:48:38,039 - __main__ - INFO - 开始设置分类仓库...
+2025-07-10 17:48:38,039 - __main__ - INFO - 创建GitHub仓库: default
+2025-07-10 17:48:38,506 - repo_creator - INFO - GitHub CLI已认证
+2025-07-10 17:48:39,905 - repo_creator - INFO - 成功创建仓库: default
+2025-07-10 17:48:39,908 - __main__ - INFO - 创建GitHub仓库: crawler
+2025-07-10 17:48:40,300 - repo_creator - INFO - GitHub CLI已认证
+2025-07-10 17:48:41,694 - repo_creator - INFO - 成功创建仓库: crawler
+2025-07-10 17:48:41,700 - __main__ - INFO - 创建GitHub仓库: script
+2025-07-10 17:48:42,067 - repo_creator - INFO - GitHub CLI已认证
+2025-07-10 17:48:44,383 - repo_creator - INFO - 成功创建仓库: script
+2025-07-10 17:48:44,384 - __main__ - INFO - 创建GitHub仓库: trading
+2025-07-10 17:48:44,756 - repo_creator - INFO - GitHub CLI已认证
+2025-07-10 17:48:46,177 - repo_creator - INFO - 成功创建仓库: trading
+2025-07-10 17:48:46,180 - git_manager - INFO - 设置分类仓库: Default
+2025-07-10 17:48:46,241 - git_manager - INFO - Git仓库初始化成功: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Default
+2025-07-10 17:48:46,266 - git_manager - INFO - 远程仓库设置成功: https://github.com/APE-147/default.git
+2025-07-10 17:48:46,293 - git_manager - INFO - 文件已添加到git暂存区: 所有文件
+2025-07-10 17:48:46,313 - git_manager - INFO - Git提交成功: Initialize Default repository: 2025-07-10 17:48:46
+2025-07-10 17:48:46,337 - git_manager - ERROR - Git推送失败: Command '['git', 'push']' returned non-zero exit status 128.
+2025-07-10 17:48:46,337 - git_manager - INFO - 分类仓库设置成功: Default
+2025-07-10 17:48:46,337 - git_manager - INFO - 设置分类仓库: Crawler
+2025-07-10 17:48:46,349 - git_manager - INFO - Git仓库初始化成功: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Crawler
+2025-07-10 17:48:46,373 - git_manager - INFO - 远程仓库设置成功: https://github.com/APE-147/crawler.git
+2025-07-10 17:48:46,396 - git_manager - INFO - 文件已添加到git暂存区: 所有文件
+2025-07-10 17:48:46,412 - git_manager - INFO - Git提交成功: Initialize Crawler repository: 2025-07-10 17:48:46
+2025-07-10 17:48:46,437 - git_manager - ERROR - Git推送失败: Command '['git', 'push']' returned non-zero exit status 128.
+2025-07-10 17:48:46,438 - git_manager - INFO - 分类仓库设置成功: Crawler
+2025-07-10 17:48:46,438 - git_manager - INFO - 设置分类仓库: Script
+2025-07-10 17:48:46,451 - git_manager - INFO - Git仓库初始化成功: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Script
+2025-07-10 17:48:46,472 - git_manager - INFO - 远程仓库设置成功: https://github.com/APE-147/script.git
+2025-07-10 17:48:46,494 - git_manager - INFO - 文件已添加到git暂存区: 所有文件
+2025-07-10 17:48:46,516 - git_manager - INFO - Git提交成功: Initialize Script repository: 2025-07-10 17:48:46
+2025-07-10 17:48:46,538 - git_manager - ERROR - Git推送失败: Command '['git', 'push']' returned non-zero exit status 128.
+2025-07-10 17:48:46,538 - git_manager - INFO - 分类仓库设置成功: Script
+2025-07-10 17:48:46,538 - git_manager - INFO - 设置分类仓库: Trading
+2025-07-10 17:48:46,551 - git_manager - INFO - Git仓库初始化成功: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Trading
+2025-07-10 17:48:46,571 - git_manager - INFO - 远程仓库设置成功: https://github.com/APE-147/trading.git
+2025-07-10 17:48:46,598 - git_manager - INFO - 文件已添加到git暂存区: 所有文件
+2025-07-10 17:48:46,627 - git_manager - INFO - Git提交成功: Initialize Trading repository: 2025-07-10 17:48:46
+2025-07-10 17:48:46,647 - git_manager - ERROR - Git推送失败: Command '['git', 'push']' returned non-zero exit status 128.
+2025-07-10 17:48:46,647 - git_manager - INFO - 分类仓库设置成功: Trading
+2025-07-10 17:48:46,647 - git_manager - INFO - 成功设置 4/4 个分类仓库
+2025-07-10 17:48:46,647 - __main__ - INFO - 所有分类仓库设置成功
+2025-07-10 17:49:11,961 - __main__ - INFO - 监控已停止
+2025-07-10 17:50:46,075 - __main__ - INFO - 执行初始扫描...
+2025-07-10 17:50:46,076 - __main__ - INFO - 初始扫描未发现新文件
+2025-07-10 17:50:46,076 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 17:50:46,076 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 17:50:46,076 - __main__ - INFO - 检查GitHub新仓库...
+2025-07-10 17:50:46,076 - github_detector - INFO - 开始检测GitHub新仓库...
+2025-07-10 17:50:47,096 - github_detector - INFO - 从GitHub获取到 4 个仓库
+2025-07-10 17:50:47,097 - github_detector - INFO - 未检测到新仓库
+2025-07-10 17:50:47,097 - github_detector - INFO - 检测完成，未发现新仓库
+2025-07-10 17:50:47,097 - __main__ - INFO - 未检测到新仓库
+2025-07-10 17:53:08,515 - __main__ - INFO - 更新README索引文件...
+2025-07-10 17:53:08,516 - index_updater - INFO - 更新README文件: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Default/README.md
+2025-07-10 17:53:08,516 - index_updater - INFO - 更新README文件: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Crawler/README.md
+2025-07-10 17:53:08,516 - index_updater - INFO - 更新README文件: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Script/README.md
+2025-07-10 17:53:08,517 - index_updater - INFO - 更新README文件: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Trading/README.md
+2025-07-10 17:53:08,517 - index_updater - INFO - 成功更新 4 个分类的README文件
+2025-07-10 17:53:08,517 - __main__ - INFO - README索引更新成功
+2025-07-10 17:53:08,517 - __main__ - INFO - 检查并提交本地变更...
