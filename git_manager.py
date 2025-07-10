@@ -101,9 +101,9 @@ class GitManager:
                 self.logger.warning("没有配置远程仓库，跳过push操作")
                 return True
             
-            # 推送到远程仓库（推送到master分支）
+            # 推送到远程仓库（推送到main分支）
             result = subprocess.run(
-                ['git', 'push', 'origin', 'main:master'],
+                ['git', 'push', 'origin', 'main'],
                 cwd=work_dir,
                 capture_output=True,
                 text=True,

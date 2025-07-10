@@ -785,3 +785,28 @@ name already exists on this account
 2025-07-10 18:26:16,512 - index_updater - INFO - 成功更新 4 个分类的README文件
 2025-07-10 18:26:16,512 - __main__ - INFO - README索引更新成功
 2025-07-10 18:26:16,512 - __main__ - INFO - 检查并提交本地变更...
+2025-07-10 18:26:16,541 - git_manager - INFO - 文件已添加到git暂存区: 所有文件
+2025-07-10 18:26:16,566 - git_manager - INFO - Git提交成功: Update repository indices: 2025-07-10 18:26:16
+2025-07-10 18:26:17,117 - git_manager - ERROR - Git推送失败: Command '['git', 'push', 'origin', 'main:master']' returned non-zero exit status 128.
+2025-07-10 18:26:17,117 - __main__ - INFO - 主仓库变更已自动提交
+2025-07-10 18:26:17,167 - git_manager - INFO - 文件已添加到git暂存区: 所有文件
+2025-07-10 18:26:17,195 - git_manager - INFO - Git提交成功: Update Default repository content: 2025-07-10 18:26:17
+2025-07-10 18:26:17,915 - git_manager - ERROR - Git推送失败: Command '['git', 'push', 'origin', 'main:master']' returned non-zero exit status 1.
+2025-07-10 18:26:17,966 - git_manager - INFO - 文件已添加到git暂存区: 所有文件
+2025-07-10 18:26:17,986 - git_manager - INFO - Git提交成功: Update Crawler repository content: 2025-07-10 18:26:17
+2025-07-10 18:26:18,729 - git_manager - ERROR - Git推送失败: Command '['git', 'push', 'origin', 'main:master']' returned non-zero exit status 1.
+2025-07-10 18:26:18,784 - git_manager - INFO - 文件已添加到git暂存区: 所有文件
+2025-07-10 18:26:18,803 - git_manager - INFO - Git提交成功: Update Script repository content: 2025-07-10 18:26:18
+2025-07-10 18:26:19,492 - git_manager - ERROR - Git推送失败: Command '['git', 'push', 'origin', 'main:master']' returned non-zero exit status 1.
+2025-07-10 18:26:19,534 - git_manager - INFO - 文件已添加到git暂存区: 所有文件
+2025-07-10 18:26:19,553 - git_manager - INFO - Git提交成功: Update Trading repository content: 2025-07-10 18:26:19
+2025-07-10 18:26:20,255 - git_manager - ERROR - Git推送失败: Command '['git', 'push', 'origin', 'main:master']' returned non-zero exit status 1.
+2025-07-10 18:26:20,255 - __main__ - INFO - 成功同步 4/4 个分类仓库
+2025-07-10 18:27:03,702 - __main__ - INFO - 更新README索引文件...
+2025-07-10 18:27:03,702 - index_updater - INFO - 更新README文件: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Default/README.md
+2025-07-10 18:27:03,702 - index_updater - INFO - 更新README文件: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Crawler/README.md
+2025-07-10 18:27:03,702 - index_updater - INFO - 更新README文件: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Script/README.md
+2025-07-10 18:27:03,702 - index_updater - INFO - 更新README文件: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Trading/README.md
+2025-07-10 18:27:03,702 - index_updater - INFO - 成功更新 4 个分类的README文件
+2025-07-10 18:27:03,703 - __main__ - INFO - README索引更新成功
+2025-07-10 18:27:03,703 - __main__ - INFO - 检查并提交本地变更...
