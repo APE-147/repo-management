@@ -47,5 +47,5 @@ dist/
 *.egg-info/
 
 # Configuration and data directories
-/.repo_manager/
 /.repo-manager/
+/repo-manager/
