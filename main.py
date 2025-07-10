@@ -14,6 +14,7 @@ from repo_creator import RepoCreator
 from file_monitor import FileMonitor
 from index_updater import IndexUpdater
 from git_manager import GitManager
+from github_detector import GitHubDetector
 
 class RepoManager:
     def __init__(self):
@@ -25,6 +26,7 @@ class RepoManager:
         self.repo_creator = RepoCreator()
         self.index_updater = IndexUpdater()
         self.git_manager = GitManager()
+        self.github_detector = GitHubDetector()
         
         # 设置信号处理
         signal.signal(signal.SIGINT, self.signal_handler)
@@ -126,26 +128,54 @@ class RepoManager:
         else:
             self.logger.warning("自动提交失败或无变更需要提交")
     
+    def check_github_repositories(self):
+        """检查GitHub新仓库并更新索引"""
+        self.logger.info("检查GitHub新仓库...")
+        
+        try:
+            # 检测新仓库
+            new_repos = self.github_detector.run_detection()
+            
+            if new_repos:
+                self.logger.info(f"检测到 {len(new_repos)} 个新仓库")
+                return True
+            else:
+                self.logger.info("未检测到新仓库")
+                return False
+                
+        except Exception as e:
+            self.logger.error(f"检查GitHub仓库时发生错误: {e}")
+            return False
+
     def run_once(self):
         """执行一次完整的监控和处理流程"""
         try:
             # 监控文件变化
             changes = self.file_monitor.monitor_once()
             
+            has_changes = False
+            
             if changes:
                 # 处理新文件
                 if changes['new_files']:
                     self.process_new_files(changes['new_files'])
+                    has_changes = True
                 
                 # 处理修改文件
                 if changes['modified_files']:
                     self.process_modified_files(changes['modified_files'])
+                    has_changes = True
                 
                 # 处理删除文件
                 if changes['deleted_files']:
                     self.process_deleted_files(changes['deleted_files'])
-                
-                # 更新索引
+                    has_changes = True
+            
+            # 检查GitHub新仓库
+            github_changes = self.check_github_repositories()
+            
+            # 如果有任何变化，更新索引
+            if has_changes or github_changes:
                 self.update_indices()
             
             return True

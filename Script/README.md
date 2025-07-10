@@ -28,5 +28,10 @@ This repository contains automation scripts and utility tools.
     <p>Test Project</p>
     <p><small>创建时间: 2025-07-10T12:46:35.369984</small></p>
   </div>
+  <div class="project-item">
+    <h3><a href="https://github.com/APE-147/script" target="_blank">script</a></h3>
+    <p>Script category repository index</p>
+    <p><small>创建时间: 2025-07-10T02:33:27Z</small></p>
+  </div>
 </div>
 <!-- AUTO-GENERATED-CONTENT:END -->

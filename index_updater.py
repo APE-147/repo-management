@@ -60,7 +60,44 @@ class IndexUpdater:
         
         return '\n'.join(html_content)
     
-    def update_category_readme(self, category, repos):
+    def generate_default_comprehensive_list(self, all_repos_by_category):
+        """为Default目录生成综合项目列表"""
+        if not any(repos for repos in all_repos_by_category.values()):
+            return f"{README_MARKERS['start']}\n<!-- 暂无项目 -->\n{README_MARKERS['end']}"
+        
+        html_content = [README_MARKERS['start']]
+        html_content.append('<div class="project-list">')
+        
+        # 按分类显示所有仓库
+        for category, repos in all_repos_by_category.items():
+            if repos and category != "Default":
+                html_content.append(f'  <h4>{category} Projects</h4>')
+                for repo in repos:
+                    repo_url = f"https://github.com/{GITHUB_USERNAME}/{repo['name']}"
+                    html_content.append(f'  <div class="project-item">')
+                    html_content.append(f'    <h3><a href="{repo_url}" target="_blank">{repo["name"]}</a></h3>')
+                    html_content.append(f'    <p>{repo.get("description", "")}</p>')
+                    html_content.append(f'    <p><small>分类: {category} | 创建时间: {repo.get("created_at", "")}</small></p>')
+                    html_content.append(f'  </div>')
+        
+        # 显示Default分类的仓库
+        default_repos = all_repos_by_category.get("Default", [])
+        if default_repos:
+            html_content.append(f'  <h4>Other Projects</h4>')
+            for repo in default_repos:
+                repo_url = f"https://github.com/{GITHUB_USERNAME}/{repo['name']}"
+                html_content.append(f'  <div class="project-item">')
+                html_content.append(f'    <h3><a href="{repo_url}" target="_blank">{repo["name"]}</a></h3>')
+                html_content.append(f'    <p>{repo.get("description", "")}</p>')
+                html_content.append(f'    <p><small>创建时间: {repo.get("created_at", "")}</small></p>')
+                html_content.append(f'  </div>')
+        
+        html_content.append('</div>')
+        html_content.append(README_MARKERS['end'])
+        
+        return '\n'.join(html_content)
+    
+    def update_category_readme(self, category, repos, all_repos_by_category=None):
         """更新特定分类的README文件"""
         if category not in REPO_CATEGORIES:
             self.logger.error(f"未知的分类: {category}")
@@ -78,7 +115,12 @@ class IndexUpdater:
             return False
         
         # 生成新的项目列表
-        new_project_list = self.generate_project_list(category, repos)
+        if category == "Default" and all_repos_by_category:
+            # 为Default目录生成综合索引
+            new_project_list = self.generate_default_comprehensive_list(all_repos_by_category)
+        else:
+            # 为其他分类生成常规列表
+            new_project_list = self.generate_project_list(category, repos)
         
         # 查找并替换自动生成的内容
         start_marker = README_MARKERS['start']
@@ -115,10 +157,17 @@ class IndexUpdater:
         # 更新每个分类的README
         success_count = 0
         for category, repos in categorized_repos.items():
-            if self.update_category_readme(category, repos):
-                success_count += 1
+            if category == "Default":
+                # 为Default分类传递完整的分类数据
+                if self.update_category_readme(category, repos, categorized_repos):
+                    success_count += 1
+                else:
+                    self.logger.error(f"更新分类 {category} 失败")
             else:
-                self.logger.error(f"更新分类 {category} 失败")
+                if self.update_category_readme(category, repos):
+                    success_count += 1
+                else:
+                    self.logger.error(f"更新分类 {category} 失败")
         
         self.logger.info(f"成功更新 {success_count} 个分类的README文件")
         return success_count == len(REPO_CATEGORIES)

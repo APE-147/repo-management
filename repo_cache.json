@@ -13,7 +13,47 @@
       "category": "Trading",
       "created_at": "2025-07-10T12:55:48.688395",
       "url": "https://github.com/APE-147/crypto-analyzer"
+    },
+    {
+      "name": "trading",
+      "description": "Trading category repository index",
+      "created_at": "2025-07-10T02:33:37Z",
+      "url": "https://github.com/APE-147/trading",
+      "category": "Trading",
+      "source": "github_detected"
+    },
+    {
+      "name": "script",
+      "description": "Script category repository index",
+      "created_at": "2025-07-10T02:33:27Z",
+      "url": "https://github.com/APE-147/script",
+      "category": "Script",
+      "source": "github_detected"
+    },
+    {
+      "name": "crawler",
+      "description": "Crawler category repository index",
+      "created_at": "2025-07-10T02:33:16Z",
+      "url": "https://github.com/APE-147/crawler",
+      "category": "Crawler",
+      "source": "github_detected"
+    },
+    {
+      "name": "default",
+      "description": "Default category repository index",
+      "created_at": "2025-07-10T02:33:06Z",
+      "url": "https://github.com/APE-147/default",
+      "category": "Default",
+      "source": "github_detected"
+    },
+    {
+      "name": "9414-Amazon-Temperature",
+      "description": "",
+      "created_at": "2025-07-05T15:54:27Z",
+      "url": "https://github.com/APE-147/9414-Amazon-Temperature",
+      "category": "Default",
+      "source": "github_detected"
     }
   ],
-  "last_check": "2025-07-10T12:55:48.688411"
+  "last_check": "2025-07-10T13:07:55.702872"
 }
