@@ -5,29 +5,41 @@ graph TD
     A[main.py 主控制器] --> B[file_monitor.py 文件监控器]
     A --> C[repo_creator.py 仓库创建器]
     A --> D[index_updater.py 索引更新器]
-    A --> E[config.py 配置文件]
+    A --> E[git_manager.py Git管理器]
+    A --> F[github_detector.py GitHub检测器]
+    A --> G[config.py 配置文件]
     
-    B --> F[扫描Markdown文件]
-    B --> G[检测文件变动]
-    B --> H[计算文件哈希]
+    B --> H[扫描Markdown文件]
+    B --> I[检测文件变动]
+    B --> J[计算文件哈希]
     
-    C --> I[GitHub CLI集成]
-    C --> J[创建GitHub仓库]
-    C --> K[管理仓库缓存]
+    C --> K[GitHub CLI集成]
+    C --> L[创建GitHub仓库]
+    C --> M[管理仓库缓存]
     
-    D --> L[读取README文件]
-    D --> M[生成项目列表HTML]
-    D --> N[更新README内容]
+    D --> N[读取README文件]
+    D --> O[生成项目列表HTML]
+    D --> P[更新README内容]
     
-    F --> O[Default文件夹]
-    F --> P[Crawler文件夹]
-    F --> Q[Script文件夹]
-    F --> R[Trading文件夹]
+    E --> Q[动态分支检测]
+    E --> R[Git操作管理]
+    E --> S[自动提交推送]
+    
+    F --> T[检测新仓库]
+    F --> U[同步GitHub状态]
+    F --> V[更新本地缓存]
+    
+    H --> W[Default文件夹]
+    H --> X[Crawler文件夹]
+    H --> Y[Script文件夹]
+    H --> Z[Trading文件夹]
     
     style A fill:#e1f5fe
     style B fill:#f3e5f5
     style C fill:#e8f5e8
     style D fill:#fff3e0
+    style E fill:#e8f4fd
+    style F fill:#f1f8e9
 ```
 
 ## 功能描述
@@ -38,6 +50,8 @@ graph TD
 2. **自动创建仓库** - 根据markdown文件自动在GitHub上创建对应的仓库
 3. **自动更新索引** - 维护各分类的README文件，自动添加项目链接
 4. **分类管理** - 支持Default、Crawler、Script、Trading四个分类
+5. **动态分支管理** - 自动检测并适配GitHub仓库的默认分支（main/master）
+6. **智能同步** - 检测GitHub新仓库并自动更新本地索引
 
 ## 系统架构
 
@@ -47,6 +61,8 @@ graph TD
 - **file_monitor.py** - 文件监控器，检测markdown文件的增删改
 - **repo_creator.py** - 仓库创建器，使用GitHub CLI创建仓库
 - **index_updater.py** - 索引更新器，维护README文件中的项目列表
+- **git_manager.py** - Git管理器，处理本地git操作和动态分支检测
+- **github_detector.py** - GitHub检测器，检测新仓库并同步状态
 - **config.py** - 配置文件，包含所有系统配置
 
 ### 文件结构
@@ -58,9 +74,14 @@ repo-management/
 ├── file_monitor.py      # 文件监控器
 ├── repo_creator.py      # 仓库创建器
 ├── index_updater.py     # 索引更新器
+├── git_manager.py       # Git管理器
+├── github_detector.py   # GitHub检测器
+├── clean_cache.py       # 缓存清理工具
 ├── requirements.txt     # 依赖列表
 ├── README.md           # 本文件
+├── .gitignore          # Git忽略文件
 ├── repo_cache.json     # 仓库缓存（自动生成）
+├── github_repos.json   # GitHub仓库缓存（自动生成）
 ├── file_states.json    # 文件状态缓存（自动生成）
 ├── automation.log      # 系统日志（自动生成）
 ├── Default/
