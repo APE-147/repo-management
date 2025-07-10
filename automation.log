@@ -815,3 +815,28 @@ name already exists on this account
 2025-07-10 18:27:04,316 - git_manager - ERROR - Git推送失败: Command '['git', 'push', 'origin', 'main']' returned non-zero exit status 128.
 2025-07-10 18:27:04,316 - __main__ - INFO - 主仓库变更已自动提交
 2025-07-10 18:27:04,489 - __main__ - INFO - 成功同步 4/4 个分类仓库
+2025-07-10 18:43:32,387 - __main__ - INFO - 开始持续监控模式...
+2025-07-10 18:43:32,387 - __main__ - INFO - 监控间隔: 60 秒
+2025-07-10 18:43:32,387 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 18:43:32,389 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 18:43:32,389 - __main__ - INFO - 检查GitHub新仓库...
+2025-07-10 18:43:32,389 - github_detector - INFO - 开始检测GitHub新仓库...
+2025-07-10 18:43:33,142 - github_detector - INFO - 从GitHub获取到 6 个仓库
+2025-07-10 18:43:33,145 - github_detector - INFO - 检测到新仓库: repo-management
+2025-07-10 18:43:33,145 - github_detector - INFO - 检测到新仓库: Trading
+2025-07-10 18:43:33,145 - github_detector - INFO - 检测到新仓库: Script
+2025-07-10 18:43:33,145 - github_detector - INFO - 检测到新仓库: Crawler
+2025-07-10 18:43:33,145 - github_detector - INFO - 检测到新仓库: Default
+2025-07-10 18:43:33,146 - github_detector - INFO - GitHub缓存已更新
+2025-07-10 18:43:33,146 - github_detector - INFO - 检测到 5 个新仓库
+2025-07-10 18:43:33,151 - github_detector - INFO - 本地缓存已更新
+2025-07-10 18:43:33,151 - github_detector - INFO - 检测完成，发现 5 个新仓库
+2025-07-10 18:43:33,151 - __main__ - INFO - 检测到 5 个新仓库
+2025-07-10 18:43:33,152 - __main__ - INFO - 更新README索引文件...
+2025-07-10 18:43:33,154 - index_updater - INFO - 更新README文件: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Default/README.md
+2025-07-10 18:43:33,155 - index_updater - INFO - 更新README文件: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Crawler/README.md
+2025-07-10 18:43:33,156 - index_updater - INFO - 更新README文件: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Script/README.md
+2025-07-10 18:43:33,156 - index_updater - INFO - 更新README文件: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Trading/README.md
+2025-07-10 18:43:33,156 - index_updater - INFO - 成功更新 4 个分类的README文件
+2025-07-10 18:43:33,156 - __main__ - INFO - README索引更新成功
+2025-07-10 18:43:33,156 - __main__ - INFO - 检查并提交本地变更...
