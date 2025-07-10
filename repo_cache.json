@@ -61,7 +61,15 @@
       "url": "https://github.com/APE-147/test-deepthink-repo",
       "category": "Default",
       "source": "github_detected"
+    },
+    {
+      "name": "repo-management",
+      "description": "GitHub repository auto-management system",
+      "created_at": "2025-07-10T07:22:58Z",
+      "url": "https://github.com/APE-147/repo-management",
+      "category": "Script",
+      "source": "github_detected"
     }
   ],
-  "last_check": "2025-07-10T17:15:53.223218"
+  "last_check": "2025-07-10T17:24:12.059717"
 }

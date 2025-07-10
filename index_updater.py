@@ -40,62 +40,71 @@ class IndexUpdater:
             return False
     
     def generate_project_list(self, category, repos):
-        """生成项目列表HTML"""
+        """生成项目列表Markdown"""
         if not repos:
             return f"{README_MARKERS['start']}\n<!-- 暂无项目 -->\n{README_MARKERS['end']}"
         
-        html_content = [README_MARKERS['start']]
-        html_content.append('<div class="project-list">')
+        # 按创建时间排序，最新的在前
+        sorted_repos = sorted(repos, key=lambda x: x.get('created_at', ''), reverse=True)
         
-        for repo in repos:
+        content = [README_MARKERS['start']]
+        
+        for repo in sorted_repos:
             repo_url = f"https://github.com/{GITHUB_USERNAME}/{repo['name']}"
-            html_content.append(f'  <div class="project-item">')
-            html_content.append(f'    <h3><a href="{repo_url}" target="_blank">{repo["name"]}</a></h3>')
-            html_content.append(f'    <p>{repo.get("description", "")}</p>')
-            html_content.append(f'    <p><small>创建时间: {repo.get("created_at", "")}</small></p>')
-            html_content.append(f'  </div>')
+            description = repo.get("description", "")
+            created_at = repo.get("created_at", "")
+            
+            # 使用简单的bullet list格式
+            content.append(f"- **[{repo['name']}]({repo_url})** - {description}")
+            if created_at:
+                content.append(f"  - 创建时间: {created_at}")
         
-        html_content.append('</div>')
-        html_content.append(README_MARKERS['end'])
+        content.append(README_MARKERS['end'])
         
-        return '\n'.join(html_content)
+        return '\n'.join(content)
     
     def generate_default_comprehensive_list(self, all_repos_by_category):
         """为Default目录生成综合项目列表"""
         if not any(repos for repos in all_repos_by_category.values()):
             return f"{README_MARKERS['start']}\n<!-- 暂无项目 -->\n{README_MARKERS['end']}"
         
-        html_content = [README_MARKERS['start']]
-        html_content.append('<div class="project-list">')
+        content = [README_MARKERS['start']]
         
-        # 按分类显示所有仓库
+        # 收集所有仓库并按创建时间排序（最新的在前）
+        all_repos = []
         for category, repos in all_repos_by_category.items():
-            if repos and category != "Default":
-                html_content.append(f'  <h4>{category} Projects</h4>')
-                for repo in repos:
+            for repo in repos:
+                repo_with_category = repo.copy()
+                repo_with_category['category'] = category
+                all_repos.append(repo_with_category)
+        
+        # 按创建时间排序，最新的在前
+        sorted_repos = sorted(all_repos, key=lambda x: x.get('created_at', ''), reverse=True)
+        
+        # 按分类分组显示
+        categories_shown = set()
+        for category in ["Crawler", "Script", "Trading", "Default"]:
+            category_repos = [repo for repo in sorted_repos if repo.get('category') == category]
+            if category_repos:
+                if category == "Default":
+                    content.append(f"\n## Other Projects")
+                else:
+                    content.append(f"\n## {category} Projects")
+                
+                for repo in category_repos:
                     repo_url = f"https://github.com/{GITHUB_USERNAME}/{repo['name']}"
-                    html_content.append(f'  <div class="project-item">')
-                    html_content.append(f'    <h3><a href="{repo_url}" target="_blank">{repo["name"]}</a></h3>')
-                    html_content.append(f'    <p>{repo.get("description", "")}</p>')
-                    html_content.append(f'    <p><small>分类: {category} | 创建时间: {repo.get("created_at", "")}</small></p>')
-                    html_content.append(f'  </div>')
+                    description = repo.get("description", "")
+                    created_at = repo.get("created_at", "")
+                    
+                    content.append(f"- **[{repo['name']}]({repo_url})** - {description}")
+                    if created_at:
+                        content.append(f"  - 创建时间: {created_at}")
+                
+                categories_shown.add(category)
         
-        # 显示Default分类的仓库
-        default_repos = all_repos_by_category.get("Default", [])
-        if default_repos:
-            html_content.append(f'  <h4>Other Projects</h4>')
-            for repo in default_repos:
-                repo_url = f"https://github.com/{GITHUB_USERNAME}/{repo['name']}"
-                html_content.append(f'  <div class="project-item">')
-                html_content.append(f'    <h3><a href="{repo_url}" target="_blank">{repo["name"]}</a></h3>')
-                html_content.append(f'    <p>{repo.get("description", "")}</p>')
-                html_content.append(f'    <p><small>创建时间: {repo.get("created_at", "")}</small></p>')
-                html_content.append(f'  </div>')
+        content.append(README_MARKERS['end'])
         
-        html_content.append('</div>')
-        html_content.append(README_MARKERS['end'])
-        
-        return '\n'.join(html_content)
+        return '\n'.join(content)
     
     def update_category_readme(self, category, repos, all_repos_by_category=None):
         """更新特定分类的README文件"""

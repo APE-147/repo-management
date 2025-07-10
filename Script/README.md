@@ -22,16 +22,10 @@ This repository contains automation scripts and utility tools.
 *This file is automatically maintained by the repo-management system.*
 
 <!-- AUTO-GENERATED-CONTENT:START -->
-<div class="project-list">
-  <div class="project-item">
-    <h3><a href="https://github.com/APE-147/test-project" target="_blank">test-project</a></h3>
-    <p>Test Project</p>
-    <p><small>创建时间: 2025-07-10T12:46:35.369984</small></p>
-  </div>
-  <div class="project-item">
-    <h3><a href="https://github.com/APE-147/script" target="_blank">script</a></h3>
-    <p>Script category repository index</p>
-    <p><small>创建时间: 2025-07-10T02:33:27Z</small></p>
-  </div>
-</div>
+- **[test-project](https://github.com/APE-147/test-project)** - Test Project
+  - 创建时间: 2025-07-10T12:46:35.369984
+- **[repo-management](https://github.com/APE-147/repo-management)** - GitHub repository auto-management system
+  - 创建时间: 2025-07-10T07:22:58Z
+- **[script](https://github.com/APE-147/script)** - Script category repository index
+  - 创建时间: 2025-07-10T02:33:27Z
 <!-- AUTO-GENERATED-CONTENT:END -->
