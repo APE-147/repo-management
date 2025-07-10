@@ -840,3 +840,33 @@ name already exists on this account
 2025-07-10 18:43:33,156 - index_updater - INFO - 成功更新 4 个分类的README文件
 2025-07-10 18:43:33,156 - __main__ - INFO - README索引更新成功
 2025-07-10 18:43:33,156 - __main__ - INFO - 检查并提交本地变更...
+2025-07-10 21:32:19,231 - __main__ - INFO - 执行初始扫描...
+2025-07-10 21:32:19,232 - file_monitor - INFO - 检测到新文件: /Users/niceday/Developer/Code/Local/Script/desktop/repo-management/Script/test-project.md
+2025-07-10 21:32:19,232 - file_monitor - INFO - 检测到新文件: /Users/niceday/Developer/Code/Local/Script/desktop/repo-management/Script/test-auto-match-pull.md
+2025-07-10 21:32:19,232 - file_monitor - INFO - 检测到新文件: /Users/niceday/Developer/Code/Local/Script/desktop/repo-management/Trading/crypto-analyzer.md
+2025-07-10 21:32:19,232 - file_monitor - INFO - 检测到文件删除: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Script/test-project.md
+2025-07-10 21:32:19,232 - file_monitor - INFO - 检测到文件删除: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Trading/crypto-analyzer.md
+2025-07-10 21:32:19,232 - __main__ - INFO - 初始扫描发现 3 个文件
+2025-07-10 21:32:19,232 - __main__ - INFO - 处理 3 个新文件
+2025-07-10 21:32:19,232 - __main__ - INFO - 为文件 test-project 创建仓库 (分类: Script)
+2025-07-10 21:32:19,600 - repo_creator - INFO - GitHub CLI已认证
+2025-07-10 21:32:20,981 - repo_creator - INFO - 成功创建仓库: test-project
+2025-07-10 21:32:20,983 - repo_creator - INFO - 仓库 test-project 已存在于缓存中，跳过添加
+2025-07-10 21:32:20,983 - __main__ - INFO - 成功创建仓库: test-project
+2025-07-10 21:32:20,984 - __main__ - INFO - 为文件 test-auto-match-pull 创建仓库 (分类: Script)
+2025-07-10 21:32:21,365 - repo_creator - INFO - GitHub CLI已认证
+2025-07-10 21:32:23,100 - repo_creator - INFO - 成功创建仓库: test-auto-match-pull
+2025-07-10 21:32:23,102 - __main__ - INFO - 成功创建仓库: test-auto-match-pull
+2025-07-10 21:32:23,102 - __main__ - INFO - 为文件 crypto-analyzer 创建仓库 (分类: Trading)
+2025-07-10 21:32:23,464 - repo_creator - INFO - GitHub CLI已认证
+2025-07-10 21:32:24,863 - repo_creator - INFO - 成功创建仓库: crypto-analyzer
+2025-07-10 21:32:24,864 - repo_creator - INFO - 仓库 crypto-analyzer 已存在于缓存中，跳过添加
+2025-07-10 21:32:24,864 - __main__ - INFO - 成功创建仓库: crypto-analyzer
+2025-07-10 21:32:24,865 - __main__ - INFO - 更新README索引文件...
+2025-07-10 21:32:24,865 - index_updater - INFO - 更新README文件: /Users/niceday/Developer/Code/Local/Script/desktop/repo-management/Default/README.md
+2025-07-10 21:32:24,866 - index_updater - INFO - 更新README文件: /Users/niceday/Developer/Code/Local/Script/desktop/repo-management/Crawler/README.md
+2025-07-10 21:32:24,866 - index_updater - INFO - 更新README文件: /Users/niceday/Developer/Code/Local/Script/desktop/repo-management/Script/README.md
+2025-07-10 21:32:24,866 - index_updater - INFO - 更新README文件: /Users/niceday/Developer/Code/Local/Script/desktop/repo-management/Trading/README.md
+2025-07-10 21:32:24,866 - index_updater - INFO - 成功更新 4 个分类的README文件
+2025-07-10 21:32:24,866 - __main__ - INFO - README索引更新成功
+2025-07-10 21:32:24,866 - __main__ - INFO - 检查并提交本地变更...

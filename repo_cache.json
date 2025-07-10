@@ -101,7 +101,14 @@
       "category": "Trading",
       "created_at": "2025-07-10T18:24:06.270476",
       "url": "https://github.com/APE-147/Trading"
+    },
+    {
+      "name": "test-auto-match-pull",
+      "description": "Auto Match Pull 测试项目",
+      "category": "Script",
+      "created_at": "2025-07-10T21:32:23.101527",
+      "url": "https://github.com/APE-147/test-auto-match-pull"
     }
   ],
-  "last_check": "2025-07-10T18:43:33.147391"
+  "last_check": "2025-07-10T21:32:23.101545"
 }

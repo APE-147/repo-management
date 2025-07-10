@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 # 基础路径配置
-BASE_DIR = Path("/Users/ns/Developer/Code/Local/Script/desktop/repo-management")
+BASE_DIR = Path("/Users/niceday/Developer/Code/Local/Script/desktop/repo-management")
 REPO_CATEGORIES = {
     "Default": BASE_DIR / "Default",
     "Crawler": BASE_DIR / "Crawler", 
