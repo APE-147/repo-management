@@ -97,7 +97,7 @@ class GitHubDetector:
                     "description": repo.get("description", ""),
                     "created_at": repo["createdAt"],
                     "url": repo["url"],
-                    "category": self.guess_category(repo["name"], repo.get("description", "")),
+                    "category": "Default",  # 所有新项目默认添加到Default分类
                     "source": "github_detected"
                 }
                 new_repos.append(repo_info)

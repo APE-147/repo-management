@@ -75,17 +75,23 @@ class RepoCreator:
             if result.returncode == 0:
                 self.logger.info(f"成功创建仓库: {repo_name}")
                 
-                # 更新缓存
+                # 更新缓存（避免重复）
                 cache = self.load_cache()
-                cache["repos"].append({
-                    "name": repo_name,
-                    "description": description,
-                    "category": category,
-                    "created_at": datetime.now().isoformat(),
-                    "url": f"https://github.com/{GITHUB_USERNAME}/{repo_name}"
-                })
-                cache["last_check"] = datetime.now().isoformat()
-                self.save_cache(cache)
+                
+                # 检查是否已存在相同名称的仓库
+                existing_names = {repo["name"] for repo in cache["repos"]}
+                if repo_name not in existing_names:
+                    cache["repos"].append({
+                        "name": repo_name,
+                        "description": description,
+                        "category": category,
+                        "created_at": datetime.now().isoformat(),
+                        "url": f"https://github.com/{GITHUB_USERNAME}/{repo_name}"
+                    })
+                    cache["last_check"] = datetime.now().isoformat()
+                    self.save_cache(cache)
+                else:
+                    self.logger.info(f"仓库 {repo_name} 已存在于缓存中，跳过添加")
                 
                 return True
             else:

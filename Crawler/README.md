@@ -24,6 +24,4 @@ This repository contains web crawling and data scraping related projects.
 <!-- AUTO-GENERATED-CONTENT:START -->
 - **[crawler](https://github.com/APE-147/crawler)** - Crawler category repository index
   - 创建时间: 2025-07-10T17:48:41.696062
-- **[crawler](https://github.com/APE-147/crawler)** - Crawler category repository index
-  - 创建时间: 2025-07-10T02:33:16Z
 <!-- AUTO-GENERATED-CONTENT:END -->

@@ -28,6 +28,4 @@ This repository contains automation scripts and utility tools.
   - 创建时间: 2025-07-10T12:46:35.369984
 - **[repo-management](https://github.com/APE-147/repo-management)** - GitHub repository auto-management system
   - 创建时间: 2025-07-10T07:22:58Z
-- **[script](https://github.com/APE-147/script)** - Script category repository index
-  - 创建时间: 2025-07-10T02:33:27Z
 <!-- AUTO-GENERATED-CONTENT:END -->
