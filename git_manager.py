@@ -85,6 +85,59 @@ class GitManager:
                 self.logger.error(f"Git提交失败: {e}")
                 return False
     
+    def get_default_branch(self, path=None):
+        """获取远程仓库的默认分支"""
+        work_dir = path or self.base_dir
+        try:
+            # 首先尝试获取远程仓库URL
+            result = subprocess.run(
+                ['git', 'remote', 'get-url', 'origin'],
+                cwd=work_dir,
+                capture_output=True,
+                text=True
+            )
+            
+            if result.returncode != 0:
+                self.logger.warning("无法获取远程仓库URL，使用默认分支main")
+                return 'main'
+            
+            # 获取远程仓库信息
+            result = subprocess.run(
+                ['git', 'ls-remote', '--symref', 'origin', 'HEAD'],
+                cwd=work_dir,
+                capture_output=True,
+                text=True
+            )
+            
+            if result.returncode == 0 and result.stdout:
+                # 解析默认分支名称
+                for line in result.stdout.split('\n'):
+                    if line.startswith('ref: refs/heads/'):
+                        branch_name = line.split('ref: refs/heads/')[1].split('\t')[0].strip()
+                        self.logger.info(f"检测到远程默认分支: {branch_name}")
+                        return branch_name
+            
+            # 如果无法检测，尝试当前分支
+            result = subprocess.run(
+                ['git', 'branch', '--show-current'],
+                cwd=work_dir,
+                capture_output=True,
+                text=True
+            )
+            
+            if result.returncode == 0 and result.stdout.strip():
+                current_branch = result.stdout.strip()
+                self.logger.info(f"使用当前分支: {current_branch}")
+                return current_branch
+            
+            # 最后默认使用main
+            self.logger.info("无法检测分支，使用默认分支main")
+            return 'main'
+            
+        except subprocess.CalledProcessError as e:
+            self.logger.warning(f"检测默认分支失败: {e}，使用main")
+            return 'main'
+    
     def push(self, path=None):
         """推送到远程仓库"""
         work_dir = path or self.base_dir
@@ -101,15 +154,16 @@ class GitManager:
                 self.logger.warning("没有配置远程仓库，跳过push操作")
                 return True
             
-            # 推送到远程仓库（推送到main分支）
+            # 获取默认分支并推送
+            default_branch = self.get_default_branch(work_dir)
             result = subprocess.run(
-                ['git', 'push', 'origin', 'main'],
+                ['git', 'push', 'origin', default_branch],
                 cwd=work_dir,
                 capture_output=True,
                 text=True,
                 check=True
             )
-            self.logger.info("Git推送成功")
+            self.logger.info(f"Git推送成功到分支: {default_branch}")
             return True
         except subprocess.CalledProcessError as e:
             self.logger.error(f"Git推送失败: {e}")
@@ -223,13 +277,15 @@ class GitManager:
             
             # 执行初始提交和推送
             if self.auto_commit_and_push(f"Initialize {category_name} repository", category_path):
-                # 设置main分支并推送
+                # 获取并设置默认分支
                 try:
-                    subprocess.run(['git', 'branch', '-M', 'main'], cwd=category_path, check=True)
-                    subprocess.run(['git', 'push', '-u', 'origin', 'main'], cwd=category_path, check=True)
-                    self.logger.info(f"分类仓库推送成功: {category_name}")
+                    default_branch = self.get_default_branch(category_path)
+                    # 确保当前分支名称正确
+                    subprocess.run(['git', 'branch', '-M', default_branch], cwd=category_path, check=True)
+                    subprocess.run(['git', 'push', '-u', 'origin', default_branch], cwd=category_path, check=True)
+                    self.logger.info(f"分类仓库推送成功到分支 {default_branch}: {category_name}")
                 except subprocess.CalledProcessError as e:
-                    self.logger.warning(f"推送失败但仓库已设置: {category_name}")
+                    self.logger.warning(f"推送失败但仓库已设置: {category_name} - {e}")
                 success_count += 1
                 self.logger.info(f"分类仓库设置成功: {category_name}")
             else:
