@@ -1,0 +1,17 @@
+include README.md
+include LICENSE
+include requirements.txt
+include MANIFEST.in
+include setup.py
+
+recursive-include repo_manager *.py
+recursive-include repo_manager/templates *
+
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude __pycache__
+global-exclude .DS_Store
+global-exclude *.log
+global-exclude repo_cache.json
+global-exclude github_repos.json
+global-exclude file_states.json

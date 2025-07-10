@@ -1,5 +1,50 @@
-# My Repo
-/Default/
-/Crawler/
-/Trading/
-/Script/
+# Repository Manager
+*.log
+.DS_Store
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Cache files
+repo_cache.json
+github_repos.json
+file_states.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Build
+build/
+dist/
+*.egg-info/
+
+# Configuration and data directories
+/.repo-manager/
