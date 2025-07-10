@@ -48,4 +48,4 @@ dist/
 
 # Configuration and data directories
 /.repo-manager/
-/repo-manager/
+/repo_index/
