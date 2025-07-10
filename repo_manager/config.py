@@ -70,6 +70,9 @@ class Config:
         return {
             "github_username": os.getenv("GITHUB_USERNAME", ""),
             "monitor_interval": 60,
+            "file_monitor_interval": 3,  # 文件监控间隔（秒）
+            "commit_delay": 5,  # 检测到变动后延迟提交时间（秒）
+            "github_cache_interval": 300,  # GitHub查询缓存间隔（秒，5分钟）
             "repo_template": {
                 "private": False,
                 "auto_init": True,
@@ -120,6 +123,21 @@ class Config:
     def monitor_interval(self) -> int:
         """获取监控间隔（秒）"""
         return self.get("monitor_interval", 60)
+    
+    @property
+    def file_monitor_interval(self) -> int:
+        """获取文件监控间隔（秒）"""
+        return self.get("file_monitor_interval", 3)
+    
+    @property
+    def commit_delay(self) -> int:
+        """获取提交延迟时间（秒）"""
+        return self.get("commit_delay", 5)
+    
+    @property
+    def github_cache_interval(self) -> int:
+        """获取GitHub缓存间隔（秒）"""
+        return self.get("github_cache_interval", 300)
     
     @property
     def repo_categories(self) -> Dict[str, Path]:

@@ -133,10 +133,23 @@ class RepoManager:
         return unindexed_repos
     
     def monitor_continuous(self):
-        """持续监控模式"""
+        """持续监控模式 - 集成README文件监控和GitHub查询"""
         self.logger.info("开始持续监控模式...")
         
+        import threading
         import time
+        
+        # 启动README文件监控线程
+        file_monitor_thread = threading.Thread(
+            target=self.file_monitor.monitor_readme_files_continuous,
+            args=(self.git_manager,),
+            daemon=True
+        )
+        file_monitor_thread.start()
+        self.logger.info("README文件监控线程已启动")
+        
+        # 清理过期缓存
+        self.db_manager.clear_expired_cache()
         
         try:
             while True:
@@ -155,6 +168,8 @@ class RepoManager:
                     
         except Exception as e:
             self.logger.error(f"持续监控模式失败: {e}")
+        finally:
+            self.logger.info("主监控线程已停止")
     
     def get_status(self) -> Dict[str, Any]:
         """获取系统状态"""
@@ -319,6 +334,79 @@ class FileMonitor:
         else:
             self.logger.info("未检测到文件变动")
             return None
+    
+    def monitor_readme_files_continuous(self, git_manager):
+        """持续监控README.md文件变动，检测到变动后延迟提交"""
+        import time
+        from pathlib import Path
+        
+        self.logger.info(f"开始持续监控README.md文件 (间隔: {self.config.file_monitor_interval}秒)")
+        
+        # 记录README文件状态
+        readme_states = {}
+        
+        def get_readme_files_state():
+            """获取所有README.md文件的状态"""
+            states = {}
+            for category in self.config.repo_categories:
+                readme_path = self.config.repo_index_dir / category / "README.md"
+                if readme_path.exists():
+                    states[str(readme_path)] = {
+                        "mtime": readme_path.stat().st_mtime,
+                        "size": readme_path.stat().st_size
+                    }
+            return states
+        
+        # 初始化状态
+        readme_states = get_readme_files_state()
+        pending_commit = False
+        commit_timer = None
+        
+        try:
+            while True:
+                current_states = get_readme_files_state()
+                
+                # 检测是否有变动
+                changes_detected = False
+                for file_path, current_state in current_states.items():
+                    if file_path not in readme_states or readme_states[file_path] != current_state:
+                        self.logger.info(f"检测到README文件变动: {file_path}")
+                        changes_detected = True
+                        break
+                
+                # 检测删除的文件
+                for file_path in readme_states:
+                    if file_path not in current_states:
+                        self.logger.info(f"检测到README文件删除: {file_path}")
+                        changes_detected = True
+                        break
+                
+                if changes_detected:
+                    readme_states = current_states
+                    pending_commit = True
+                    commit_timer = time.time() + self.config.commit_delay
+                    self.logger.info(f"将在 {self.config.commit_delay} 秒后自动提交")
+                
+                # 检查是否需要提交
+                if pending_commit and commit_timer and time.time() >= commit_timer:
+                    self.logger.info("执行延迟提交...")
+                    try:
+                        if git_manager.commit_changes("Auto-update: README files modified"):
+                            self.logger.info("README文件变动已自动提交")
+                        else:
+                            self.logger.info("没有需要提交的变更")
+                    except Exception as e:
+                        self.logger.error(f"自动提交失败: {e}")
+                    
+                    pending_commit = False
+                    commit_timer = None
+                
+                time.sleep(self.config.file_monitor_interval)
+                
+        except KeyboardInterrupt:
+            self.logger.info("README文件监控已停止")
+        except Exception as e:
+            self.logger.error(f"README文件监控出错: {e}")
 
 
 class RepoCreator:
@@ -427,7 +515,22 @@ class GitHubDetector:
         self.logger = logging.getLogger(f"{__name__}.GitHubDetector")
     
     def get_github_repositories(self) -> List[Dict[str, Any]]:
-        """获取GitHub上的所有仓库列表"""
+        """获取GitHub上的所有仓库列表（带缓存）"""
+        from datetime import datetime, timedelta
+        
+        cache_key = f"github_repos_{self.config.github_username}"
+        
+        # 先尝试从缓存获取
+        cached_data = self.db_manager.get_cache(cache_key)
+        if cached_data:
+            try:
+                repos = json.loads(cached_data)
+                self.logger.info(f"从缓存获取到 {len(repos)} 个仓库")
+                return repos
+            except json.JSONDecodeError:
+                self.logger.warning("缓存数据格式错误，重新从GitHub获取")
+        
+        # 缓存不存在或已过期，从GitHub获取
         try:
             cmd = ['gh', 'repo', 'list', self.config.github_username, 
                    '--json', 'name,description,createdAt,url,isPrivate']
@@ -436,6 +539,11 @@ class GitHubDetector:
             if result.returncode == 0:
                 repos = json.loads(result.stdout)
                 self.logger.info(f"从GitHub获取到 {len(repos)} 个仓库")
+                
+                # 保存到缓存
+                expires_at = (datetime.now() + timedelta(seconds=self.config.github_cache_interval)).isoformat()
+                self.db_manager.set_cache(cache_key, result.stdout, expires_at)
+                
                 return repos
             else:
                 self.logger.error(f"获取GitHub仓库列表失败: {result.stderr}")

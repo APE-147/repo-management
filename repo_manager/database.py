@@ -35,10 +35,23 @@ class DatabaseManager:
                 )
             ''')
             
+            # 创建GitHub查询缓存表
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS github_cache (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    cache_key TEXT UNIQUE NOT NULL,
+                    data TEXT NOT NULL,
+                    created_at TEXT NOT NULL,
+                    expires_at TEXT NOT NULL
+                )
+            ''')
+            
             # 创建索引
             cursor.execute('CREATE INDEX IF NOT EXISTS idx_category ON repositories(category)')
             cursor.execute('CREATE INDEX IF NOT EXISTS idx_indexed ON repositories(is_indexed)')
             cursor.execute('CREATE INDEX IF NOT EXISTS idx_name ON repositories(name)')
+            cursor.execute('CREATE INDEX IF NOT EXISTS idx_cache_key ON github_cache(cache_key)')
+            cursor.execute('CREATE INDEX IF NOT EXISTS idx_expires_at ON github_cache(expires_at)')
             
             conn.commit()
             self.logger.info("数据库初始化完成")
@@ -202,3 +215,59 @@ class DatabaseManager:
         except Exception as e:
             self.logger.error(f"获取所有仓库失败: {e}")
             return []
+    
+    def set_cache(self, cache_key: str, data: str, expires_at: str) -> bool:
+        """设置缓存"""
+        try:
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    INSERT OR REPLACE INTO github_cache 
+                    (cache_key, data, created_at, expires_at)
+                    VALUES (?, ?, ?, ?)
+                ''', (cache_key, data, datetime.now().isoformat(), expires_at))
+                conn.commit()
+                self.logger.debug(f"缓存已设置: {cache_key}")
+                return True
+        except Exception as e:
+            self.logger.error(f"设置缓存失败 {cache_key}: {e}")
+            return False
+    
+    def get_cache(self, cache_key: str) -> Optional[str]:
+        """获取缓存（如果未过期）"""
+        try:
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    SELECT data FROM github_cache 
+                    WHERE cache_key = ? AND expires_at > ?
+                ''', (cache_key, datetime.now().isoformat()))
+                
+                result = cursor.fetchone()
+                if result:
+                    self.logger.debug(f"缓存命中: {cache_key}")
+                    return result[0]
+                else:
+                    self.logger.debug(f"缓存未命中或已过期: {cache_key}")
+                    return None
+        except Exception as e:
+            self.logger.error(f"获取缓存失败 {cache_key}: {e}")
+            return None
+    
+    def clear_expired_cache(self) -> int:
+        """清理过期缓存"""
+        try:
+            with self.get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    DELETE FROM github_cache 
+                    WHERE expires_at <= ?
+                ''', (datetime.now().isoformat(),))
+                deleted_count = cursor.rowcount
+                conn.commit()
+                if deleted_count > 0:
+                    self.logger.info(f"清理了 {deleted_count} 个过期缓存项")
+                return deleted_count
+        except Exception as e:
+            self.logger.error(f"清理过期缓存失败: {e}")
+            return 0
