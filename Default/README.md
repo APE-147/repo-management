@@ -17,6 +17,8 @@ This repository contains the default collection of projects and serves as the ma
 <!-- AUTO-GENERATED-CONTENT:START -->
 - **[default](https://github.com/APE-147/default)** - Default category repository index
   - 创建时间: 2025-07-10T17:48:39.907101
+- **[test-new-default-project](https://github.com/APE-147/test-new-default-project)** - Testing new project auto-categorization to Default
+  - 创建时间: 2025-07-10T08:00:30Z
 - **[test-deepthink-repo](https://github.com/APE-147/test-deepthink-repo)** - Testing repository creation for deepthink analysis
   - 创建时间: 2025-07-10T07:15:43Z
 - **[9414-Amazon-Temperature](https://github.com/APE-147/9414-Amazon-Temperature)** - 

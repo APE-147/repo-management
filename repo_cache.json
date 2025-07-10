@@ -65,7 +65,15 @@
       "url": "https://github.com/APE-147/repo-management",
       "category": "Script",
       "source": "github_detected"
+    },
+    {
+      "name": "test-new-default-project",
+      "description": "Testing new project auto-categorization to Default",
+      "created_at": "2025-07-10T08:00:30Z",
+      "url": "https://github.com/APE-147/test-new-default-project",
+      "category": "Default",
+      "source": "github_detected"
     }
   ],
-  "last_check": "2025-07-10T17:48:46.178917"
+  "last_check": "2025-07-10T18:00:59.876632"
 }

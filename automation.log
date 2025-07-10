@@ -631,3 +631,42 @@
 2025-07-10 17:59:49,432 - index_updater - INFO - 成功更新 4 个分类的README文件
 2025-07-10 17:59:49,432 - __main__ - INFO - README索引更新成功
 2025-07-10 17:59:49,432 - __main__ - INFO - 检查并提交本地变更...
+2025-07-10 17:59:49,464 - git_manager - INFO - 文件已添加到git暂存区: 所有文件
+2025-07-10 17:59:49,490 - git_manager - INFO - Git提交成功: Update repository indices: 2025-07-10 17:59:49
+2025-07-10 17:59:50,060 - git_manager - ERROR - Git推送失败: Command '['git', 'push']' returned non-zero exit status 128.
+2025-07-10 17:59:50,061 - __main__ - INFO - 主仓库变更已自动提交
+2025-07-10 17:59:50,109 - git_manager - INFO - 文件已添加到git暂存区: 所有文件
+2025-07-10 17:59:50,128 - git_manager - INFO - Git提交成功: Update Default repository content: 2025-07-10 17:59:50
+2025-07-10 17:59:51,338 - git_manager - INFO - Git推送成功
+2025-07-10 17:59:51,383 - git_manager - INFO - 文件已添加到git暂存区: 所有文件
+2025-07-10 17:59:51,407 - git_manager - INFO - Git提交成功: Update Crawler repository content: 2025-07-10 17:59:51
+2025-07-10 17:59:52,693 - git_manager - INFO - Git推送成功
+2025-07-10 17:59:52,734 - git_manager - INFO - 文件已添加到git暂存区: 所有文件
+2025-07-10 17:59:52,758 - git_manager - INFO - Git提交成功: Update Script repository content: 2025-07-10 17:59:52
+2025-07-10 17:59:54,046 - git_manager - INFO - Git推送成功
+2025-07-10 17:59:54,101 - git_manager - INFO - 文件已添加到git暂存区: 所有文件
+2025-07-10 17:59:54,126 - git_manager - INFO - Git提交成功: Update Trading repository content: 2025-07-10 17:59:54
+2025-07-10 17:59:55,369 - git_manager - INFO - Git推送成功
+2025-07-10 17:59:55,370 - __main__ - INFO - 成功同步 4/4 个分类仓库
+2025-07-10 18:00:59,039 - __main__ - INFO - 执行初始扫描...
+2025-07-10 18:00:59,041 - __main__ - INFO - 初始扫描未发现新文件
+2025-07-10 18:00:59,041 - file_monitor - INFO - 开始文件监控检查...
+2025-07-10 18:00:59,041 - file_monitor - INFO - 未检测到文件变动
+2025-07-10 18:00:59,041 - __main__ - INFO - 检查GitHub新仓库...
+2025-07-10 18:00:59,041 - github_detector - INFO - 开始检测GitHub新仓库...
+2025-07-10 18:00:59,875 - github_detector - INFO - 从GitHub获取到 5 个仓库
+2025-07-10 18:00:59,875 - github_detector - INFO - 检测到新仓库: test-new-default-project
+2025-07-10 18:00:59,876 - github_detector - INFO - GitHub缓存已更新
+2025-07-10 18:00:59,876 - github_detector - INFO - 检测到 1 个新仓库
+2025-07-10 18:00:59,876 - github_detector - INFO - 添加新仓库到本地缓存: test-new-default-project
+2025-07-10 18:00:59,876 - github_detector - INFO - 本地缓存已更新
+2025-07-10 18:00:59,876 - github_detector - INFO - 检测完成，发现 1 个新仓库
+2025-07-10 18:00:59,876 - __main__ - INFO - 检测到 1 个新仓库
+2025-07-10 18:00:59,876 - __main__ - INFO - 更新README索引文件...
+2025-07-10 18:00:59,877 - index_updater - INFO - 更新README文件: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Default/README.md
+2025-07-10 18:00:59,877 - index_updater - INFO - 更新README文件: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Crawler/README.md
+2025-07-10 18:00:59,878 - index_updater - INFO - 更新README文件: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Script/README.md
+2025-07-10 18:00:59,878 - index_updater - INFO - 更新README文件: /Users/ns/Developer/Code/Local/Script/desktop/repo-management/Trading/README.md
+2025-07-10 18:00:59,878 - index_updater - INFO - 成功更新 4 个分类的README文件
+2025-07-10 18:00:59,878 - __main__ - INFO - README索引更新成功
+2025-07-10 18:00:59,878 - __main__ - INFO - 检查并提交本地变更...
