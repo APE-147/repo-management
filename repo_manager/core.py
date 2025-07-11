@@ -830,9 +830,33 @@ class GitManager:
             local_path = self.category_repos_dir / category
             
             if local_path.exists():
-                # 仓库已存在，执行pull
+                # 仓库已存在，确保在默认分支并执行pull
                 self.logger.info(f"更新分类仓库: {category}")
-                result = subprocess.run(['git', 'pull'], cwd=local_path, capture_output=True, text=True)
+                
+                # 获取默认分支名称
+                default_branch_result = subprocess.run(
+                    ['git', 'symbolic-ref', 'refs/remotes/origin/HEAD'], 
+                    cwd=local_path, capture_output=True, text=True
+                )
+                
+                if default_branch_result.returncode == 0:
+                    default_branch = default_branch_result.stdout.strip().split('/')[-1]
+                else:
+                    # 如果无法获取默认分支，尝试常见分支名
+                    default_branch = 'main'
+                    check_main = subprocess.run(
+                        ['git', 'rev-parse', '--verify', 'origin/main'], 
+                        cwd=local_path, capture_output=True, text=True
+                    )
+                    if check_main.returncode != 0:
+                        default_branch = 'master'
+                
+                # 切换到默认分支
+                subprocess.run(['git', 'checkout', default_branch], cwd=local_path, capture_output=True)
+                
+                # 拉取最新代码
+                result = subprocess.run(['git', 'pull', 'origin', default_branch], 
+                                      cwd=local_path, capture_output=True, text=True)
                 if result.returncode != 0:
                     self.logger.warning(f"Pull失败: {result.stderr}")
                     return False
@@ -879,6 +903,17 @@ class GitManager:
                 self.logger.error(f"分类仓库目录不存在: {local_path}")
                 return False
             
+            # 获取当前分支名称
+            current_branch_result = subprocess.run(
+                ['git', 'rev-parse', '--abbrev-ref', 'HEAD'], 
+                cwd=local_path, capture_output=True, text=True
+            )
+            
+            if current_branch_result.returncode == 0:
+                current_branch = current_branch_result.stdout.strip()
+            else:
+                current_branch = 'main'  # 默认分支
+            
             # 检查是否有变更
             result = subprocess.run(['git', 'status', '--porcelain'], 
                                   cwd=local_path, capture_output=True, text=True)
@@ -890,8 +925,9 @@ class GitManager:
                 # 提交变更
                 subprocess.run(['git', 'commit', '-m', message], cwd=local_path, check=True)
                 
-                # 推送到远程
-                push_result = subprocess.run(['git', 'push'], cwd=local_path, capture_output=True, text=True)
+                # 推送到远程默认分支
+                push_result = subprocess.run(['git', 'push', 'origin', current_branch], 
+                                           cwd=local_path, capture_output=True, text=True)
                 if push_result.returncode != 0:
                     self.logger.error(f"推送失败 {category}: {push_result.stderr}")
                     return False
