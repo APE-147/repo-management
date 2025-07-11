@@ -15,10 +15,6 @@ auto-match-pull: 匹配指定位置下的所有同名 GitHub 项目, 自动 pull
 
 repo-management: 管理并自动更新 GitHub 项目信息到统一索引
 
-测试反向同步功能是否工作正常
-
-
-
 
 <!-- 自动生成的项目列表将在此处更新 -->
 
