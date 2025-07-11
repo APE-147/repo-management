@@ -24,6 +24,53 @@ auto-match-pull:
 2. 已提交但未推送: 不会丢失，可能产生merge commit
 3. 工作目录干净: 正常pull，无影响
 
+```mermaid
+flowchart TD
+%% ---------- 整体流程 ----------
+subgraph SYNC["整体流程"]
+    Obsidian["Obsidian 本地编辑"] 
+    ReadmeFlat["readme-flat 同步"] 
+    Decision["是否为 index repo?"]
+    RepoMgmt["repo-management 自动 push"] 
+    LocalRecord["本地记录其他项目更改"]
+    GitHub["GitHub 远端"]
+
+    Obsidian－－"编辑 [readme] 目录"－－＞ReadmeFlat
+    ReadmeFlat－－"同步到源地址"－－＞Decision
+    Decision－－"是"－－＞RepoMgmt
+    Decision－－"否"－－＞LocalRecord
+    RepoMgmt－－"push 到远端"－－＞GitHub
+    LocalRecord－－"等待后续处理"－－＞GitHub
+end
+
+%% ---------- auto-match-pull 逻辑 ----------
+subgraph AMP["auto-match-pull 流程"]
+    Uncommit["工作目录有未提交更改"]
+    Stash["stash 保存"]
+    Pull1["pull 更新"]
+    Restore["stash pop 恢复"]
+
+    Committed["已提交但未 push"]
+    Pull2["pull 可能产生 merge commit"]
+
+    Clean["工作目录干净"]
+    Pull3["正常 pull"]
+
+    Uncommit－－"自动 stash"－－＞Stash
+    Stash－－"拉取远端"－－＞Pull1
+    Pull1－－"恢复改动"－－＞Restore
+
+    Committed－－"拉取远端"－－＞Pull2
+
+    Clean－－"拉取远端"－－＞Pull3
+end
+
+%% ---------- 可选着色 ----------
+classDef layerStyle fill:#e0e0ff,stroke:#000080,color:#000080,font-weight:bold;
+class GitHub layerStyle
+
+```
+
 
 <!-- 自动生成的项目列表将在此处更新 -->
 
