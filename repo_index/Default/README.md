@@ -9,7 +9,7 @@ Default projects
 
 ### GitHub 管理
 
-readme-flat: 本地双向同步 obsidian, 支持双向同步 markdown reeadme 的编辑
+readme-flat: 本地双向同步 obsidian, 支持双向同步 markdown reeadme 的编辑, 保留自定义 readme 文件的层级结构
 
 auto-match-pull: 匹配指定位置下的所有同名 GitHub 项目, 自动 pull, 忽略 index repo, 个人使用
 
