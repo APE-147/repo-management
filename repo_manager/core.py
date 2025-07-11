@@ -720,7 +720,7 @@ class IndexUpdater:
             self.logger.error(f"更新远程分类仓库失败 {category}: {e}")
     
     def _generate_full_readme_content(self, category: str, repos: List[Dict[str, Any]]) -> str:
-        """生成完整的README内容用于远程仓库"""
+        """生成README内容用于远程仓库 - 只提供最小模板，主要用于智能合并"""
         category_descriptions = {
             "Default": "Default projects",
             "Crawler": "Web scraping and crawling projects", 
@@ -731,6 +731,8 @@ class IndexUpdater:
         description = category_descriptions.get(category, f"{category} projects")
         projects_list = self._generate_projects_list(repos)
         
+        # 只生成带有AUTO-GENERATED-CONTENT标记的最小模板
+        # 智能合并机制会保留用户的自定义内容
         return f"""# {category} Projects
 
 {description}
@@ -875,7 +877,7 @@ class GitManager:
             return False
     
     def update_category_readme(self, category: str, content: str) -> bool:
-        """更新分类仓库的README.md文件"""
+        """更新分类仓库的README.md文件 - 智能合并，只更新自动生成的内容"""
         try:
             local_path = self.category_repos_dir / category
             readme_path = local_path / "README.md"
@@ -884,15 +886,61 @@ class GitManager:
                 self.logger.error(f"分类仓库目录不存在: {local_path}")
                 return False
             
-            # 写入README内容
+            # 智能合并内容：保留用户编辑，只更新自动生成部分
+            merged_content = self._merge_readme_content(readme_path, content)
+            
+            # 写入合并后的内容
             with open(readme_path, 'w', encoding='utf-8') as f:
-                f.write(content)
+                f.write(merged_content)
             
             self.logger.info(f"已更新分类README: {category}")
             return True
         except Exception as e:
             self.logger.error(f"更新分类README失败 {category}: {e}")
             return False
+    
+    def _merge_readme_content(self, readme_path: Path, new_content: str) -> str:
+        """合并README内容：保留用户编辑，只更新AUTO-GENERATED-CONTENT部分"""
+        try:
+            # 读取现有内容
+            if readme_path.exists():
+                with open(readme_path, 'r', encoding='utf-8') as f:
+                    existing_content = f.read()
+            else:
+                existing_content = ""
+            
+            # 从新内容中提取自动生成的部分
+            auto_start = "<!-- AUTO-GENERATED-CONTENT:START -->"
+            auto_end = "<!-- AUTO-GENERATED-CONTENT:END -->"
+            
+            # 从新内容中提取自动生成的部分
+            new_start_idx = new_content.find(auto_start)
+            new_end_idx = new_content.find(auto_end)
+            
+            if new_start_idx == -1 or new_end_idx == -1:
+                # 如果新内容没有标记，直接返回新内容
+                return new_content
+            
+            new_auto_content = new_content[new_start_idx:new_end_idx + len(auto_end)]
+            
+            # 在现有内容中查找并替换自动生成的部分
+            if existing_content:
+                existing_start_idx = existing_content.find(auto_start)
+                existing_end_idx = existing_content.find(auto_end)
+                
+                if existing_start_idx != -1 and existing_end_idx != -1:
+                    # 保留用户编辑的部分，只替换自动生成的部分
+                    before_auto = existing_content[:existing_start_idx]
+                    after_auto = existing_content[existing_end_idx + len(auto_end):]
+                    merged_content = before_auto + new_auto_content + after_auto
+                    return merged_content
+            
+            # 如果现有内容没有标记，返回新内容
+            return new_content
+            
+        except Exception as e:
+            self.logger.error(f"合并README内容失败: {e}")
+            return new_content
     
     def commit_and_push_category_repo(self, category: str, message: str) -> bool:
         """提交并推送分类仓库的变更"""
