@@ -9,9 +9,8 @@ Default projects
 
 ### GitHub 管理
 
-readme-flat: 本地双向同步 obsidian, 支持双向同步 markdown reeadme 的编辑, 保留自定义 readme 文件的层级结构
-
-auto-match-pull: 匹配指定位置下的所有同名 GitHub 项目, 自动 pull, 忽略 index repo, 个人使用
+- `readme-flat`: 本地双向同步 obsidian, 支持双向同步 markdown reeadme 的编辑, 保留自定义 readme 文件的层级结构
+- auto-match-pull: 匹配指定位置下的所有同名 GitHub 项目, 自动 pull, 忽略 index repo, 个人使用
 
 repo-management: 一旦有新项目添加至 GitHub, 自动添加链接至 index 项目的 readme, 一旦repo index 的 readme 有变更, 自动push
 
@@ -26,49 +25,38 @@ auto-match-pull:
 
 ```mermaid
 flowchart TD
-%% ---------- 整体流程 ----------
-subgraph SYNC["整体流程"]
-    Obsidian["Obsidian 本地编辑"] 
-    ReadmeFlat["readme-flat 同步"] 
-    Decision["是否为 index repo?"]
-    RepoMgmt["repo-management 自动 push"] 
-    LocalRecord["本地记录其他项目更改"]
-    GitHub["GitHub 远端"]
-
-    Obsidian－－"编辑 [readme] 目录"－－＞ReadmeFlat
-    ReadmeFlat－－"同步到源地址"－－＞Decision
-    Decision－－"是"－－＞RepoMgmt
-    Decision－－"否"－－＞LocalRecord
-    RepoMgmt－－"push 到远端"－－＞GitHub
-    LocalRecord－－"等待后续处理"－－＞GitHub
-end
-
-%% ---------- auto-match-pull 逻辑 ----------
-subgraph AMP["auto-match-pull 流程"]
-    Uncommit["工作目录有未提交更改"]
-    Stash["stash 保存"]
-    Pull1["pull 更新"]
-    Restore["stash pop 恢复"]
-
-    Committed["已提交但未 push"]
-    Pull2["pull 可能产生 merge commit"]
-
-    Clean["工作目录干净"]
-    Pull3["正常 pull"]
-
-    Uncommit－－"自动 stash"－－＞Stash
-    Stash－－"拉取远端"－－＞Pull1
-    Pull1－－"恢复改动"－－＞Restore
-
-    Committed－－"拉取远端"－－＞Pull2
-
-    Clean－－"拉取远端"－－＞Pull3
-end
-
-%% ---------- 可选着色 ----------
-classDef layerStyle fill:#e0e0ff,stroke:#000080,color:#000080,font-weight:bold;
-class GitHub layerStyle
-
+    A[Obsidian 编辑 readme 目录下的文件] --> B[readme-flat 检测到文件变更]
+    B --> C[readme-flat 同步更改至源地址]
+    C --> D{判断是否为 index repo}
+    
+    D -->|是| E[repo-management 检测到 index repo readme 变更]
+    D -->|否| F[本地记录更改]
+    
+    E --> G[repo-management 自动 push 到 GitHub]
+    
+    H[GitHub 有新项目添加] --> I[repo-management 检测到新项目]
+    I --> J[自动添加链接至 index 项目的 readme]
+    J --> K[自动 push 更新后的 index readme]
+    
+    L[auto-match-pull 定期运行] --> M[匹配指定位置下所有同名 GitHub 项目]
+    M --> N[忽略 index repo]
+    N --> O{检查本地状态}
+    
+    O -->|未提交的更改| P[stash 保存更改]
+    O -->|已提交但未推送| Q[执行 pull，可能产生 merge commit]
+    O -->|工作目录干净| R[正常 pull]
+    
+    P --> S[执行 pull]
+    S --> T[自动恢复 stash 的更改]
+    Q --> U[Pull 完成，保留本地提交]
+    R --> V[Pull 完成，无冲突]
+    
+    style A fill:#e1f5fe
+    style G fill:#c8e6c9
+    style K fill:#c8e6c9
+    style T fill:#fff3e0
+    style U fill:#fff3e0
+    style V fill:#fff3e0
 ```
 
 
