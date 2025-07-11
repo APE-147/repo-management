@@ -13,7 +13,9 @@ readme-flat: 本地双向同步 obsidian, 支持双向同步 markdown reeadme �
 
 auto-match-pull: 匹配指定位置下的所有同名 GitHub 项目, 自动 pull, 个人使用
 
-repo-management: 将当前当前的更改是否不会被同步过去?
+repo-management: 管理并自动更新 GitHub 项目信息到统一索引
+
+测试反向同步功能是否工作正常
 
 
 
