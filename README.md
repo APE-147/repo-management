@@ -14,25 +14,32 @@ graph TB
     H --> I[README Generation]
     I --> E
     
-    J[Main Thread] --> K[scan_once]
-    K --> B
-    K --> H
+    H --> J[Multi-Repo Sync]
+    J --> K[category_repos/]
+    K --> L[Smart Content Merge]
+    L --> M[Remote GitHub Repos]
     
-    L[Monitor Thread] --> F
-    F --> M{File Changed?}
-    M -->|Yes| N[Wait 5s]
-    N --> G
-    M -->|No| O[Wait 3s]
-    O --> F
+    N[Main Thread] --> O[scan_once]
+    O --> B
+    O --> H
     
-    P[CLI Commands] --> Q[repo-manager]
-    Q --> R[init/scan/monitor/status]
-    R --> J
+    P[Monitor Thread] --> F
+    F --> Q{File Changed?}
+    Q -->|Yes| R[Wait 5s]
+    R --> G
+    Q -->|No| S[Wait 3s]
+    S --> F
+    
+    T[CLI Commands] --> U[repo-manager]
+    U --> V[init/scan/monitor/status]
+    V --> N
     
     style A fill:#e1f5fe
     style E fill:#f3e5f5
     style C fill:#e8f5e8
     style G fill:#fff3e0
+    style L fill:#fff8e1
+    style M fill:#e8f5e8
 ```
 
 ## 概述
@@ -56,6 +63,17 @@ graph TB
 - **3秒间隔**: 实时监控 `repo_index/*/README.md` 文件变动
 - **5秒延迟提交**: 检测到变动后延迟提交，避免频繁提交
 - **独立线程**: 文件监控与主逻辑分离，提高响应性
+
+### 🚀 智能内容合并 (v1.1.0新增)
+- **防覆盖保护**: 保留用户手动编辑的内容，只更新自动生成部分
+- **智能标记解析**: 使用 `<!-- AUTO-GENERATED-CONTENT:START/END -->` 标记分离用户内容和自动内容
+- **无损更新**: 用户可以自由编辑README文件，系统不会覆盖手动内容
+
+### 🌐 多仓库同步管理 (v1.1.0新增)
+- **自动远程同步**: 将本地索引同步到对应的GitHub仓库
+- **默认分支支持**: 自动检测并使用main/master分支
+- **智能克隆管理**: 自动克隆、更新、推送远程仓库
+- **双向内容保护**: 既保护本地编辑，也保护远程用户内容
 
 ### 🛠 完整的CLI工具
 - `repo-manager init` - 初始化系统配置
