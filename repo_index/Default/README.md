@@ -4,6 +4,19 @@ Default projects
 
 ## Project List
 
+
+我感觉需要有一个结构图串联我的项目
+
+### GitHub 管理
+
+readme-flat: 本地双向同步 obsidian, 支持双向同步 markdown reeadme 的编辑
+
+
+
+
+
+
+
 <!-- 自动生成的项目列表将在此处更新 -->
 
 ---
