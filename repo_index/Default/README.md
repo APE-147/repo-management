@@ -17,7 +17,8 @@ repo-management: 一旦有新项目添加至 GitHub, 自动添加链接至 index
 
 整体流程
 Obsidian 对[readme]目录下的文件进行编辑 -> readme-flat 同步更改至源地址 -> 如果是 index repo markdown -> repo-management 自动push
-       -> 如果是其他项目 repo -> repo-management 自动push
+       -> 如果是其他项目 repo -> 本地记录更改
+
 
 
 
