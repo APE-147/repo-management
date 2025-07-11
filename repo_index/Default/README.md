@@ -16,7 +16,9 @@ auto-match-pull: 匹配指定位置下的所有同名 GitHub 项目, 自动 pull
 repo-management: 一旦有新项目添加至 GitHub, 自动添加链接至 index 项目的 readme, 一旦repo index 的 readme 有变更, 自动push
 
 整体流程
-Obsidian 对[readme]目录下的文件进行编辑 -> readme-flat 同步更改至源地址 -> 如果是index
+Obsidian 对[readme]目录下的文件进行编辑 -> readme-flat 同步更改至源地址 -> 如果是 index repo markdown -> repo-management 自动push
+       -> 如果是其他项目 repo -> repo-management 自动push
+
 
 
 <!-- 自动生成的项目列表将在此处更新 -->
