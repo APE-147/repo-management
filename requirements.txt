@@ -1,5 +1,0 @@
-# GitHub Repository Manager Dependencies
-# Most functionality uses Python standard library
-
-# Optional dependencies for enhanced features:
-requests>=2.25.0        # For HTTP requests (optional)
