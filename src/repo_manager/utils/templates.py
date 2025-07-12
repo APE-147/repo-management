@@ -3,7 +3,7 @@
 """
 import sys
 from pathlib import Path
-from .config import Config
+from ..services.config import Config
 
 def create_launchd_plist(config: Config) -> str:
     """创建macOS LaunchAgent plist文件"""
