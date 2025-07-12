@@ -5,6 +5,10 @@ Default projects
 ## Project List
 
 
+
+对当前的项目进行了重构测试重构的效果
+测试测试 2
+
 我感觉需要有一个结构图串联我的项目
 
 ### GitHub 管理
@@ -65,6 +69,10 @@ flowchart TD
 *This file is automatically maintained by the repo-management system.*
 
 <!-- AUTO-GENERATED-CONTENT:START -->
+- **[test-repo-service-validation](https://github.com/APE-147/test-repo-service-validation)** - Test repository to validate repo-manager service functionality
+  - 创建时间: 2025-07-12
+- **[test-path-config-validation](https://github.com/APE-147/test-path-config-validation)** - Test repository to validate new path configuration for repo-manager service
+  - 创建时间: 2025-07-12
 - **[readme-flat](https://github.com/APE-147/readme-flat)**
   - 创建时间: 2025-07-10
 - **[auto-match-pull](https://github.com/APE-147/auto-match-pull)**
