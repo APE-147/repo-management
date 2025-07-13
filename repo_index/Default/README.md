@@ -65,12 +65,5 @@ flowchart TD
 *This file is automatically maintained by the repo-management system.*
 
 <!-- AUTO-GENERATED-CONTENT:START -->
-- **[repo-management](https://github.com/APE-147/repo-management)**
-  - 创建时间: 2025-07-10
-- **[readme-flat](https://github.com/APE-147/readme-flat)**
-  - 创建时间: 2025-07-10
-- **[auto-match-pull](https://github.com/APE-147/auto-match-pull)**
-  - 创建时间: 2025-07-10
-- **[obsidian-tab-switch](https://github.com/APE-147/obsidian-tab-switch)**
-  - 创建时间: 2025-07-12
+<!-- 暂无项目 -->
 <!-- AUTO-GENERATED-CONTENT:END -->
