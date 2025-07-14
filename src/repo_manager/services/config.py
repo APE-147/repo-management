@@ -20,7 +20,7 @@ class Config:
             self.config_dir = Path(config_dir)
         else:
             # 使用新的数据目录位置
-            self.config_dir = Path.home() / "Developer" / "Code" / "Script_data" / "repo_manager"
+            self.config_dir = Path.home() / "Developer" / "Code" / "Script_data" / "repo-management"
         
         self.config_file = self.config_dir / "config.json"
         self.data_dir = self.config_dir / "data"

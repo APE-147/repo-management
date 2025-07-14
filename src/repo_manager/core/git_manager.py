@@ -12,9 +12,8 @@ class GitManager:
     def __init__(self, config: Config):
         self.config = config
         self.logger = logging.getLogger(f"{__name__}.GitManager")
-        # 远程分类仓库的本地克隆目录
-        self.category_repos_dir = self.config.config_dir.parent / "category_repos"
-        self.category_repos_dir.mkdir(exist_ok=True)
+        # 使用repo_index目录作为分类仓库的本地克隆目录
+        self.category_repos_dir = self.config.repo_index_dir
     
     def clone_or_update_category_repo(self, category: str) -> bool:
         """克隆或更新分类仓库"""
