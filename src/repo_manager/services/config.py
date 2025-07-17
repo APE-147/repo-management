@@ -19,14 +19,22 @@ class Config:
         if config_dir:
             self.config_dir = Path(config_dir)
         else:
-            # 使用新的数据目录位置
-            self.config_dir = Path.home() / "Developer" / "Code" / "Script_data" / "repo-management"
+            # 使用新的数据目录位置，优先从环境变量获取
+            project_data_dir = os.getenv("PROJECT_DATA_DIR")
+            if project_data_dir:
+                self.config_dir = Path(project_data_dir)
+            else:
+                # 备用默认路径
+                self.config_dir = Path.home() / "Developer" / "Code" / "Data" / "srv" / "repo_management"
         
         self.config_file = self.config_dir / "config.json"
         self.data_dir = self.config_dir / "data"
         
-        # 设置repo_index目录为当前项目目录下的repo_index
-        self.repo_index_dir = Path("/Users/niceday/Developer/Code/Local/Script/desktop/repo-management/repo_index")
+        # 设置repo_index目录为数据目录下的repo_index
+        self.repo_index_dir = self.config_dir / "repo_index"
+        
+        # 扫描文件夹配置文件
+        self.scan_folders_file = self.config_dir / "scan_folders.json"
         
         # 创建必要的目录
         self._ensure_directories()
@@ -212,6 +220,42 @@ class Config:
             if not cache_file.exists():
                 cache_file.write_text('{"repos": [], "last_check": null}', encoding='utf-8')
     
+    def load_scan_folders(self) -> Dict[str, Any]:
+        """加载扫描文件夹配置"""
+        if self.scan_folders_file.exists():
+            try:
+                with open(self.scan_folders_file, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+            except (json.JSONDecodeError, FileNotFoundError):
+                pass
+        
+        # 返回默认扫描配置
+        return {
+            "scan_folders": [
+                str(Path.home() / "Developer"),
+                str(Path.home() / "Documents" / "Projects"),
+                str(Path.home() / "Developer" / "Code" / "Local" / "Scripts")
+            ],
+            "exclude_patterns": [
+                "*.git*",
+                "node_modules",
+                "__pycache__",
+                "*.pyc",
+                ".venv",
+                "venv"
+            ]
+        }
+    
+    def get_scan_folders(self) -> list:
+        """获取要扫描的文件夹列表"""
+        scan_config = self.load_scan_folders()
+        return scan_config.get("scan_folders", [])
+    
+    def get_exclude_patterns(self) -> list:
+        """获取排除模式列表"""
+        scan_config = self.load_scan_folders()
+        return scan_config.get("exclude_patterns", [])
+
     def validate_config(self) -> bool:
         """验证配置是否有效"""
         required_keys = ["github_username"]
